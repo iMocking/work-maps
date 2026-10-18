@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+  background: #050f33;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* 扫光动画 */
+@keyframes saoguangMove {
+  from {
+    transform: translateX(-160px);
+  }
+  to {
+    transform: translateX(2000px);
+  }
+}
+
+/* 边框闪烁动画 */
+@keyframes bkAnimate {
+  0% { opacity: 1; }
+  50% { opacity: 0.2; }
+  100% { opacity: 1; }
+}
+
+/* 箭头动画 */
+@keyframes arrowAnimate {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes arrowAnimate2 {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(90%); }
+  100% { transform: translateX(0); }
+}
+
+/* 菜单激活动画 */
+@keyframes menuActiveScale {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1, 1.2); }
+  100% { transform: scale(1.1, 1.2); opacity: 0; }
+}
+
+/* 点位脉冲动画 */
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+#app {
+  width: 1920px;
+  height: 1080px;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}

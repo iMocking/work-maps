@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-canvas-width="1920" data-canvas-height="1080" style="width:1920px;height:1080px;margin:0;padding:0;box-sizing:border-box;">
+<head>
+  <meta charset="UTF-8">
+  <title>园区智慧管理驾驶舱</title>
+</head>
+<body style="width:1920px;height:1080px;margin:0;padding:0;box-sizing:border-box;overflow:hidden;font-family:'Microsoft YaHei','PingFang SC',sans-serif;background:#0a1628;">
+
+  <!-- 主容器 -->
+  <main style="position:relative;width:1920px;height:1080px;overflow:hidden;background:linear-gradient(135deg,#0a1628 0%,#0f2838 50%,#12303f 100%);">
+
+    <!-- ===== 顶部 Header ===== -->
+    <header style="position:absolute;top:0;left:0;width:1920px;height:70px;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 30px;background:linear-gradient(180deg,rgba(10,25,40,0.95) 0%,rgba(10,25,40,0.7) 70%,transparent 100%);border-bottom:1px solid rgba(212,168,83,0.2);box-sizing:border-box;">
+
+      <!-- 左侧：Logo + 天气 -->
+      <div style="display:flex;align-items:center;gap:20px;width:420px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;border:2px solid #d4a853;border-radius:4px;display:flex;align-items:center;justify-content:center;">
+            <span style="color:#d4a853;font-size:18px;font-weight:bold;">智</span>
+          </div>
+          <span style="color:#e8c97a;font-size:16px;font-weight:500;letter-spacing:1px;">智慧园区平台</span>
+        </div>
+        <div style="width:1px;height:24px;background:rgba(212,168,83,0.3);"></div>
+        <div style="display:flex;align-items:center;gap:8px;color:#a0b8c8;font-size:13px;">
+          <span style="font-size:18px;">☀</span>
+          <span>晴 26°C</span>
+        </div>
+      </div>
+
+      <!-- 中间：大标题 -->
+      <div style="flex:1;text-align:center;">
+        <h1 style="margin:0;font-size:28px;font-weight:600;color:#e8c97a;letter-spacing:6px;text-shadow:0 0 20px rgba(212,168,83,0.4);">园区智慧管理驾驶舱</h1>
+        <div style="margin-top:4px;font-size:11px;color:rgba(232,201,122,0.5);letter-spacing:8px;">PARK INTELLIGENT MANAGEMENT CENTER</div>
+      </div>
+
+      <!-- 右侧：日期时间 + 日志 -->
+      <div style="display:flex;align-items:center;gap:20px;width:420px;justify-content:flex-end;">
+        <div style="text-align:right;">
+          <div style="color:#e8c97a;font-size:16px;font-weight:500;" id="datetime">2026-10-18 10:40:25</div>
+          <div style="color:#a0b8c8;font-size:12px;">星期日 · 农历九月初八</div>
+        </div>
+        <div style="width:1px;height:24px;background:rgba(212,168,83,0.3);"></div>
+        <div style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 12px;border:1px solid rgba(212,168,83,0.3);border-radius:4px;background:rgba(212,168,83,0.1);">
+          <span style="color:#d4a853;font-size:14px;">📋</span>
+          <span style="color:#e8c97a;font-size:13px;">系统日志</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== 中间地图区域 ===== -->
+    <div style="position:absolute;top:70px;left:0;width:1920px;height:1010px;z-index:1;overflow:hidden;">
+      <!-- 底图 -->
+      <img src="https://aka.doubaocdn.com/s/rz7HUUvbss" alt="园区俯瞰图" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:1920px;height:auto;min-height:1010px;opacity:0.9;">
+      <!-- 暗化遮罩 -->
+      <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(180deg,rgba(10,22,40,0.3) 0%,rgba(10,22,40,0.1) 30%,rgba(10,22,40,0.3) 100%);"></div>
+
+      <!-- ===== 点位标记层 ===== -->
+      <!-- 摄像头点位 - 东南3 -->
+      <div class="marker camera" data-type="camera" data-name="东南3摄像头" style="position:absolute;top:32%;left:58%;width:36px;height:36px;transform:translate(-50%,-100%);cursor:pointer;z-index:10;" onclick="showInfoCard('camera','东南3摄像头','东南门东侧建筑外墙','在线','正常运行')">
+        <div style="width:36px;height:36px;background:rgba(78,205,196,0.9);border:2px solid #4ecdc4;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 15px rgba(78,205,196,0.6);">
+          <span style="color:#0a1628;font-size:16px;">📹</span>
+        </div>
+        <div style="position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;white-space:nowrap;background:rgba(10,30,45,0.9);padding:2px 8px;border-radius:3px;font-size:11px;color:#4ecdc4;border:1px solid rgba(78,205,196,0.3);">东南3</div>
+      </div>
+
+      <!-- 摄像头点位 - 西北2 -->
+      <div class="marker camera" data-type="camera" data-name="西北2摄像头" style="position:absolute;top:28%;left:28%;width:36px;height:36px;transform:translate(-50%,-100%);cursor:pointer;z-index:10;" onclick="showInfoCard('camera','西北2摄像头','西北角办公楼顶层','在线','正常运行')">
+        <div style="width:36px;height:36px;background:rgba(78,205,196,0.9);border:2px solid #4ecdc4;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 15px rgba(78,205,196,0.6);">
+          <span style="color:#0a1628;font-size:16px;">📹</span>
+        </div>
+        <div style="position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;white-space:nowrap;background:rgba(10,30,45,0.9);padding:2px 8px;border-radius:3px;font-size:11px;color:#4ecdc4;border:1px solid rgba(78,205,196,0.3);">西北2</div>
+      </div>
+
+      <!-- 摄像头点位 - 中心1 -->
+      <div class="marker camera" data-type="camera" data-name="中心1摄像头" style="position:absolute;top:45%;left:48%;width:36px;height:36px;transform:translate(-50%,-100%);cursor:pointer;z-index:10;" onclick="showInfoCard('camera','中心1摄像头','中央广场北侧灯杆','在线','正常运行')">
+        <div style="width:36px;height:36px;background:rgba(78,205,196,0.9);border:2px solid #4ecdc4;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 15px rgba(78,205,196,0.6);">
+          <span style="color:#0a1628;font-size:16px;">📹</span>
+        </div>
+        <div style="position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;white-space:nowrap;background:rgba(10,30,45,0.9);padding:2px 8px;border-radius:3px;font-size:11px;color:#4ecdc4;border:1px solid rgba(78,205,196,0.3);">中心1</div>
+      </div>
+
+      <!-- 消防栓 - 东门1 -->
+      <div class="marker fire" data-type="fire" data-name="东门消防栓" style="position:absolute;top:62%;left:72%;width:32px;height:32px;transform:translate(-50%,-100%);cursor:pointer;z-index:10;" onclick="showInfoCard('fire','东门消防栓','东门外道路南侧','正常','水压正常')">
+        <div style="width:32px;height:32px;background:rgba(255,107,107,0.9);border:2px solid #ff6b6b;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(255,107,107,0.5);">
+          <span style="color:#fff;font-size:14px;">🧯</span>
+        </div>
+      </div>
+
+      <!-- 消防栓 - 西门2 -->
+      <div class="marker fire" data-type="fire" data-name="西门消防栓" style="position:absolute;top:55%;left:22%;width:32px;height:32px;transform:translate(-50%,-100%);cursor:pointer;z-index:10;" onclick="showInfoCard('fire','西门消防栓','西门内广场西侧','正常','水压正常')">
+        <div style="width:32px;height:32px;background:rgba(255,107,107,0.9);border:2px solid #ff6b6b;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(255,107,107,0.5);">
+          <span style="color:#fff;font-size:14px;">🧯</span>
+        </div>
+      </div>
+
+      <!-- 水井 - 北区1 -->
+      <div class="marker water" data-type="water" data-name="北区水井" style="position:absolute;top:22%;left:42%;width:32px;height:32px;transform:translate(-50%,-100%);cursor:pointer;z-index:10;" onclick="showInfoCard('water','北区水井','北厂区绿化带内','正常','水质合格')">
+        <div style="width:32px;height:32px;background:rgba(100,181,246,0.9);border:2px solid #64b5f6;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(100,181,246,0.5);">
+          <span style="color:#fff;font-size:14px;">💧</span>
+        </div>
+      </div>
+
+      <!-- 电井房 - 南区1 -->
+      <div class="marker electric" data-type="electric" data-name="南区电井房" style="position:absolute;top:68%;left:42%;width:32px;height:32px;transform:translate(-50%,-100%);cursor:pointer;z-index:10;" onclick="showInfoCard('electric','南区电井房','南办公楼地下一层','正常','温度28°C')">
+        <div style="width:32px;height:32px;background:rgba(255,213,79,0.9);border:2px solid #ffd54f;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(255,213,79,0.5);">
+          <span style="color:#0a1628;font-size:14px;">⚡</span>
+        </div>
+      </div>
+
+      <!-- 电井房 - 中心2 -->
+      <div class="marker electric" data-type="electric" data-name="中心电井房" style="position:absolute;top:40%;left:65%;width:32px;height:32px;transform:translate(-50%,-100%);cursor:pointer;z-index:10;" onclick="showInfoCard('electric','中心电井房','中央配电室','异常','温度偏高38°C')">
+        <div style="width:32px;height:32px;background:rgba(255,213,79,0.9);border:2px solid #ffd54f;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(255,213,79,0.5);animation:pulse 2s infinite;">
+          <span style="color:#0a1628;font-size:14px;">⚡</span>
+        </div>
+      </div>
+
+      <!-- ===== 信息卡片（默认隐藏） ===== -->
+      <div id="infoCard" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;background:rgba(10,30,45,0.95);border:1px solid rgba(212,168,83,0.4);border-radius:8px;z-index:500;display:none;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+        <!-- 卡片头部 -->
+        <div style="padding:12px 16px;border-bottom:1px solid rgba(212,168,83,0.2);display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="cardIcon" style="font-size:18px;">📹</span>
+            <span id="cardTitle" style="color:#e8c97a;font-size:15px;font-weight:600;">设备名称</span>
+          </div>
+          <span style="cursor:pointer;color:#a0b8c8;font-size:16px;" onclick="closeInfoCard()">×</span>
+        </div>
+        <!-- 卡片内容 -->
+        <div style="padding:14px 16px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+            <span style="color:#a0b8c8;font-size:12px;">设备类型</span>
+            <span id="cardType" style="color:#e0e0e0;font-size:12px;">摄像头</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+            <span style="color:#a0b8c8;font-size:12px;">安装位置</span>
+            <span id="cardLocation" style="color:#e0e0e0;font-size:12px;text-align:right;max-width:180px;">位置描述</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+            <span style="color:#a0b8c8;font-size:12px;">运行状态</span>
+            <span id="cardStatus" style="color:#4ecdc4;font-size:12px;">在线</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:14px;">
+            <span style="color:#a0b8c8;font-size:12px;">备注信息</span>
+            <span id="cardNote" style="color:#e0e0e0;font-size:12px;">正常运行</span>
+          </div>
+          <!-- 操作按钮 -->
+          <div style="display:flex;gap:10px;">
+            <button style="flex:1;padding:8px 0;background:linear-gradient(135deg,#d4a853,#b8923f);border:none;border-radius:4px;color:#0a1628;font-size:13px;font-weight:600;cursor:pointer;" onclick="locateToCenter()">快定位到中心</button>
+            <button style="flex:1;padding:8px 0;background:rgba(212,168,83,0.15);border:1px solid rgba(212,168,83,0.4);border-radius:4px;color:#e8c97a;font-size:13px;cursor:pointer;">查看详情</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 地图控制按钮（右下角） ===== -->
+      <div style="position:absolute;bottom:30px;right:340px;display:flex;flex-direction:column;gap:8px;z-index:100;">
+        <button style="width:36px;height:36px;background:rgba(10,30,45,0.9);border:1px solid rgba(212,168,83,0.3);border-radius:4px;color:#e8c97a;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
+        <button style="width:36px;height:36px;background:rgba(10,30,45,0.9);border:1px solid rgba(212,168,83,0.3);border-radius:4px;color:#e8c97a;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
+        <button style="width:36px;height:36px;background:rgba(10,30,45,0.9);border:1px solid rgba(212,168,83,0.3);border-radius:4px;color:#e8c97a;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;">⌂</button>
+      </div>
+
+      <!-- 图例（左下角） -->
+      <div style="position:absolute;bottom:30px;left:340px;background:rgba(10,30,45,0.85);border:1px solid rgba(212,168,83,0.2);border-radius:6px;padding:10px 14px;z-index:100;">
+        <div style="font-size:11px;color:#a0b8c8;margin-bottom:8px;">图例</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:10px;height:10px;background:#4ecdc4;border-radius:50%;"></div>
+            <span style="font-size:11px;color:#c0d0e0;">摄像头 (6)</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:10px;height:10px;background:#ff6b6b;border-radius:50%;"></div>
+            <span style="font-size:11px;color:#c0d0e0;">消防栓 (8)</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:10px;height:10px;background:#64b5f6;border-radius:50%;"></div>
+            <span style="font-size:11px;color:#c0d0e0;">水井 (3)</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:10px;height:10px;background:#ffd54f;border-radius:50%;"></div>
+            <span style="font-size:11px;color:#c0d0e0;">电井房 (5)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 左侧面板：战略物资设备总览 ===== -->
+    <aside id="leftPanel" style="position:absolute;top:90px;left:20px;width:300px;max-height:900px;z-index:200;background:rgba(10,30,45,0.92);border:1px solid rgba(212,168,83,0.3);border-radius:8px;backdrop-filter:blur(10px);display:flex;flex-direction:column;transition:all 0.3s ease;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+
+      <!-- 面板头部 -->
+      <div style="padding:14px 16px;border-bottom:1px solid rgba(212,168,83,0.2);display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="width:3px;height:16px;background:#d4a853;border-radius:2px;"></span>
+          <span style="color:#e8c97a;font-size:15px;font-weight:600;">战略物资设备</span>
+        </div>
+        <span id="leftToggle" style="cursor:pointer;color:#a0b8c8;font-size:14px;" onclick="toggleLeftPanel()">◀</span>
+      </div>
+
+      <!-- 搜索框 -->
+      <div style="padding:12px 16px;">
+        <div style="display:flex;align-items:center;background:rgba(255,255,255,0.06);border:1px solid rgba(212,168,83,0.2);border-radius:4px;padding:0 10px;">
+          <span style="color:#a0b8c8;font-size:14px;margin-right:8px;">🔍</span>
+          <input type="text" placeholder="搜索设备点位..." style="flex:1;background:transparent;border:none;outline:none;color:#e0e0e0;font-size:13px;padding:8px 0;placeholder-color:#607888;">
+        </div>
+      </div>
+
+      <!-- 设备列表 -->
+      <div style="flex:1;overflow-y:auto;padding:0 16px 16px;">
+
+        <!-- 摄像头分组 -->
+        <div style="margin-bottom:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="color:#4ecdc4;font-size:14px;">▼</span>
+              <span style="color:#c0d0e0;font-size:13px;font-weight:500;">摄像头</span>
+            </div>
+            <span style="background:rgba(78,205,196,0.15);color:#4ecdc4;font-size:11px;padding:2px 8px;border-radius:10px;">6 在线</span>
+          </div>
+          <div style="padding-left:20px;display:flex;flex-direction:column;gap:6px;">
+            <div style="padding:6px 8px;background:rgba(78,205,196,0.08);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="focusMarker('东南3摄像头')">
+              <span style="color:#e0e0e0;font-size:12px;">东南3摄像头</span>
+              <span style="width:6px;height:6px;background:#4ecdc4;border-radius:50%;"></span>
+            </div>
+            <div style="padding:6px 8px;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="focusMarker('西北2摄像头')">
+              <span style="color:#c0d0e0;font-size:12px;">西北2摄像头</span>
+              <span style="width:6px;height:6px;background:#4ecdc4;border-radius:50%;"></span>
+            </div>
+            <div style="padding:6px 8px;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="focusMarker('中心1摄像头')">
+              <span style="color:#c0d0e0;font-size:12px;">中心1摄像头</span>
+              <span style="width:6px;height:6px;background:#4ecdc4;border-radius:50%;"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 消防栓分组 -->
+        <div style="margin-bottom:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="color:#ff6b6b;font-size:14px;">▼</span>
+              <span style="color:#c0d0e0;font-size:13px;font-weight:500;">消防栓</span>
+            </div>
+            <span style="background:rgba(255,107,107,0.15);color:#ff6b6b;font-size:11px;padding:2px 8px;border-radius:10px;">8 正常</span>
+          </div>
+          <div style="padding-left:20px;display:flex;flex-direction:column;gap:6px;">
+            <div style="padding:6px 8px;background:rgba(255,107,107,0.08);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="focusMarker('东门消防栓')">
+              <span style="color:#e0e0e0;font-size:12px;">东门消防栓</span>
+              <span style="width:6px;height:6px;background:#ff6b6b;border-radius:50%;"></span>
+            </div>
+            <div style="padding:6px 8px;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="focusMarker('西门消防栓')">
+              <span style="color:#c0d0e0;font-size:12px;">西门消防栓</span>
+              <span style="width:6px;height:6px;background:#ff6b6b;border-radius:50%;"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 水井分组 -->
+        <div style="margin-bottom:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="color:#64b5f6;font-size:14px;">▼</span>
+              <span style="color:#c0d0e0;font-size:13px;font-weight:500;">水井</span>
+            </div>
+            <span style="background:rgba(100,181,246,0.15);color:#64b5f6;font-size:11px;padding:2px 8px;border-radius:10px;">3 正常</span>
+          </div>
+          <div style="padding-left:20px;display:flex;flex-direction:column;gap:6px;">
+            <div style="padding:6px 8px;background:rgba(100,181,246,0.08);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="focusMarker('北区水井')">
+              <span style="color:#e0e0e0;font-size:12px;">北区水井</span>
+              <span style="width:6px;height:6px;background:#64b5f6;border-radius:50%;"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 电井房分组 -->
+        <div style="margin-bottom:8px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="color:#ffd54f;font-size:14px;">▼</span>
+              <span style="color:#c0d0e0;font-size:13px;font-weight:500;">电井房</span>
+            </div>
+            <span style="background:rgba(255,213,79,0.15);color:#ffd54f;font-size:11px;padding:2px 8px;border-radius:10px;">4正常 1异常</span>
+          </div>
+          <div style="padding-left:20px;display:flex;flex-direction:column;gap:6px;">
+            <div style="padding:6px 8px;background:rgba(255,213,79,0.08);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="focusMarker('中心电井房')">
+              <span style="color:#e0e0e0;font-size:12px;">中心电井房</span>
+              <span style="width:6px;height:6px;background:#ff6b6b;border-radius:50%;"></span>
+            </div>
+            <div style="padding:6px 8px;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="focusMarker('南区电井房')">
+              <span style="color:#c0d0e0;font-size:12px;">南区电井房</span>
+              <span style="width:6px;height:6px;background:#ffd54f;border-radius:50%;"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- 左侧面板收起状态 -->
+    <div id="leftCollapsed" style="position:absolute;top:90px;left:20px;width:36px;height:60px;z-index:200;background:rgba(10,30,45,0.92);border:1px solid rgba(212,168,83,0.3);border-radius:6px;display:none;align-items:center;justify-content:center;cursor:pointer;" onclick="toggleLeftPanel()">
+      <span style="color:#e8c97a;font-size:14px;">▶</span>
+    </div>
+
+    <!-- ===== 右侧面板：告警/事件日志 ===== -->
+    <aside id="rightPanel" style="position:absolute;top:90px;right:20px;width:300px;max-height:900px;z-index:200;background:rgba(10,30,45,0.92);border:1px solid rgba(212,168,83,0.3);border-radius:8px;backdrop-filter:blur(10px);display:flex;flex-direction:column;transition:all 0.3s ease;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+
+      <!-- 面板头部 -->
+      <div style="padding:14px 16px;border-bottom:1px solid rgba(212,168,83,0.2);display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="width:3px;height:16px;background:#d4a853;border-radius:2px;"></span>
+          <span style="color:#e8c97a;font-size:15px;font-weight:600;">告警事件日志</span>
+        </div>
+        <span id="rightToggle" style="cursor:pointer;color:#a0b8c8;font-size:14px;" onclick="toggleRightPanel()">▶</span>
+      </div>
+
+      <!-- 事件列表 -->
+      <div style="flex:1;overflow-y:auto;padding:12px 16px;">
+
+        <!-- 高优先级告警 -->
+        <div style="margin-bottom:12px;padding:10px;background:rgba(255,107,107,0.1);border-left:3px solid #ff6b6b;border-radius:0 4px 4px 0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="color:#ff6b6b;font-size:12px;font-weight:600;">【高】设备温度异常</span>
+            <span style="color:#607888;font-size:11px;">10:35</span>
+          </div>
+          <div style="color:#c0d0e0;font-size:12px;margin-bottom:4px;">中心电井房温度偏高，当前38°C</div>
+          <div style="color:#607888;font-size:11px;">位置：中央配电室</div>
+        </div>
+
+        <!-- 中优先级告警 -->
+        <div style="margin-bottom:12px;padding:10px;background:rgba(255,213,79,0.08);border-left:3px solid #ffd54f;border-radius:0 4px 4px 0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="color:#ffd54f;font-size:12px;font-weight:600;">【中】巡检任务提醒</span>
+            <span style="color:#607888;font-size:11px;">10:15</span>
+          </div>
+          <div style="color:#c0d0e0;font-size:12px;margin-bottom:4px;">东南片区消防栓巡检任务待执行</div>
+          <div style="color:#607888;font-size:11px;">责任区：安保一组</div>
+        </div>
+
+        <!-- 普通事件 -->
+        <div style="margin-bottom:12px;padding:10px;background:rgba(78,205,196,0.06);border-left:3px solid #4ecdc4;border-radius:0 4px 4px 0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="color:#4ecdc4;font-size:12px;font-weight:600;">【信息】设备上线</span>
+            <span style="color:#607888;font-size:11px;">09:48</span>
+          </div>
+          <div style="color:#c0d0e0;font-size:12px;margin-bottom:4px;">西北2摄像头重新连接成功</div>
+          <div style="color:#607888;font-size:11px;">类型：摄像头恢复</div>
+        </div>
+
+        <!-- 普通事件 -->
+        <div style="margin-bottom:12px;padding:10px;background:rgba(78,205,196,0.06);border-left:3px solid #4ecdc4;border-radius:0 4px 4px 0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="color:#4ecdc4;font-size:12px;font-weight:600;">【信息】水质检测合格</span>
+            <span style="color:#607888;font-size:11px;">09:30</span>
+          </div>
+          <div style="color:#c0d0e0;font-size:12px;margin-bottom:4px;">北区水井例行水质检测完成</div>
+          <div style="color:#607888;font-size:11px;">检测项：pH值/浊度/余氯</div>
+        </div>
+
+        <!-- 普通事件 -->
+        <div style="margin-bottom:12px;padding:10px;background:rgba(255,255,255,0.04);border-left:3px solid #607888;border-radius:0 4px 4px 0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="color:#a0b8c8;font-size:12px;font-weight:600;">【通知】系统例行维护</span>
+            <span style="color:#607888;font-size:11px;">08:00</span>
+          </div>
+          <div style="color:#c0d0e0;font-size:12px;margin-bottom:4px;">系统每日数据备份完成</div>
+          <div style="color:#607888;font-size:11px;">耗时：3分25秒</div>
+        </div>
+
+      </div>
+
+      <!-- 底部统计 -->
+      <div style="padding:12px 16px;border-top:1px solid rgba(212,168,83,0.2);display:flex;justify-content:space-around;">
+        <div style="text-align:center;">
+          <div style="color:#ff6b6b;font-size:18px;font-weight:600;">1</div>
+          <div style="color:#607888;font-size:11px;">高优先级</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="color:#ffd54f;font-size:18px;font-weight:600;">1</div>
+          <div style="color:#607888;font-size:11px;">中优先级</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="color:#4ecdc4;font-size:18px;font-weight:600;">17</div>
+          <div style="color:#607888;font-size:11px;">今日事件</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 右侧面板收起状态 -->
+    <div id="rightCollapsed" style="position:absolute;top:90px;right:20px;width:36px;height:60px;z-index:200;background:rgba(10,30,45,0.92);border:1px solid rgba(212,168,83,0.3);border-radius:6px;display:none;align-items:center;justify-content:center;cursor:pointer;" onclick="toggleRightPanel()">
+      <span style="color:#e8c97a;font-size:14px;">◀</span>
+    </div>
+
+  </main>
+
+  <script>
+    // 实时时钟
+    function updateTime() {
+      const now = new Date();
+      const str = now.getFullYear() + '-' +
+        String(now.getMonth()+1).padStart(2,'0') + '-' +
+        String(now.getDate()).padStart(2,'0') + ' ' +
+        String(now.getHours()).padStart(2,'0') + ':' +
+        String(now.getMinutes()).padStart(2,'0') + ':' +
+        String(now.getSeconds()).padStart(2,'0');
+      document.getElementById('datetime').textContent = str;
+    }
+    setInterval(updateTime, 1000);
+
+    // 信息卡片
+    function showInfoCard(type, name, location, status, note) {
+      const card = document.getElementById('infoCard');
+      const icons = { camera: '📹', fire: '🧯', water: '💧', electric: '⚡' };
+      const types = { camera: '摄像头', fire: '消防栓', water: '水井', electric: '电井房' };
+      const statusColor = status === '异常' ? '#ff6b6b' : (status === '离线' ? '#607888' : '#4ecdc4');
+
+      document.getElementById('cardIcon').textContent = icons[type] || '📍';
+      document.getElementById('cardTitle').textContent = name;
+      document.getElementById('cardType').textContent = types[type] || '未知';
+      document.getElementById('cardLocation').textContent = location;
+      document.getElementById('cardStatus').textContent = status;
+      document.getElementById('cardStatus').style.color = statusColor;
+      document.getElementById('cardNote').textContent = note;
+
+      card.style.display = 'block';
+    }
+
+    function closeInfoCard() {
+      document.getElementById('infoCard').style.display = 'none';
+    }
+
+    function locateToCenter() {
+      // 模拟定位动画
+      const card = document.getElementById('infoCard');
+      card.style.transform = 'translate(-50%, -50%) scale(1.05)';
+      setTimeout(() => {
+        card.style.transform = 'translate(-50%, -50%) scale(1)';
+      }, 200);
+    }
+
+    // 左侧面板收起/展开
+    function toggleLeftPanel() {
+      const panel = document.getElementById('leftPanel');
+      const collapsed = document.getElementById('leftCollapsed');
+      const toggle = document.getElementById('leftToggle');
+      if (panel.style.display === 'none') {
+        panel.style.display = 'flex';
+        collapsed.style.display = 'none';
+        toggle.textContent = '◀';
+      } else {
+        panel.style.display = 'none';
+        collapsed.style.display = 'flex';
+      }
+    }
+
+    // 右侧面板收起/展开
+    function toggleRightPanel() {
+      const panel = document.getElementById('rightPanel');
+      const collapsed = document.getElementById('rightCollapsed');
+      const toggle = document.getElementById('rightToggle');
+      if (panel.style.display === 'none') {
+        panel.style.display = 'flex';
+        collapsed.style.display = 'none';
+        toggle.textContent = '▶';
+      } else {
+        panel.style.display = 'none';
+        collapsed.style.display = 'flex';
+      }
+    }
+
+    // 从列表聚焦点位
+    function focusMarker(name) {
+      const markers = document.querySelectorAll('.marker');
+      markers.forEach(m => {
+        if (m.dataset.name === name) {
+          m.style.transform = 'translate(-50%, -100%) scale(1.3)';
+          m.style.zIndex = '100';
+          setTimeout(() => {
+            m.style.transform = 'translate(-50%, -100%) scale(1)';
+            m.style.zIndex = '10';
+          }, 1000);
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
