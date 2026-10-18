@@ -81,14 +81,14 @@
         :class="{ active: mapMode === '2d' }"
         @click="mapMode = '2d'"
       >
-        2D 地图
+        2D
       </button>
       <button
         class="mode-btn"
         :class="{ active: mapMode === '3d' }"
         @click="mapMode = '3d'"
       >
-        3D 地图
+        3D
       </button>
     </div>
 
@@ -495,22 +495,23 @@ function locateToCenter() {
 
 .map-mode-switch {
   position: absolute;
-  left: 20px;
-  bottom: 100px;
-  width: 360px;
+  left: 410px;
+  bottom: 65px;
   display: flex;
   gap: 6px;
-  background: rgba(10, 30, 50, 0.8);
-  border: 1px solid rgba(48, 220, 255, 0.3);
-  padding: 6px;
+  background: rgba(10, 30, 50, 0.406);
+  border: 1px solid rgba(48, 220, 255, 0.13);
+  border-radius: 6px;
+  padding: 4px;
   z-index: 10;
 }
 
 .mode-btn {
   flex: 1;
-  padding: 8px 12px;
+  padding: 6px 6px;
   background: transparent;
   border: 1px solid transparent;
+  border-radius: 6px;
   color: rgba(196, 243, 254, 0.6);
   font-size: 13px;
   cursor: pointer;
@@ -730,8 +731,8 @@ function locateToCenter() {
 /* 雷达装饰 */
 .radar-decor {
   position: absolute;
-  right: 450px;
-  bottom: 120px;
+  right: 420px;
+  bottom: 65px;
   width: 60px;
   height: 60px;
   z-index: 5;
