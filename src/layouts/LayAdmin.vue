@@ -52,6 +52,7 @@ const router = useRouter()
 const menuItems = [
   { path: '/map-edit', icon: '🗺️', title: '地图编辑' },
   { path: '/device-management', icon: '📡', title: '设备管理' },
+  { path: '/dict-management', icon: '📚', title: '字典管理' },
   { path: '/fire-management', icon: '🧯', title: '消防管理' },
   { path: '/alarm-management', icon: '🚨', title: '告警管理' },
 ]

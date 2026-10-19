@@ -6,7 +6,7 @@ const routes = [
     name: 'console',
     component: () => import('../layouts/LayConsole.vue'),
     redirect: '/dashboard',
-    meta: { title: '驾驶舱' },
+    meta: { title: '驾驶舱控制台' },
     children: [
       {
         path: 'dashboard',
@@ -34,6 +34,12 @@ const routes = [
         name: 'device-management',
         component: () => import('../views/admin/DeviceManagement.vue'),
         meta: { title: '设备管理' },
+      },
+      {
+        path:'dict-management',
+        name: 'dict-management',
+        component: () => import('../views/admin/DictManagement.vue'),
+        meta: { title: '字典管理' },
       },
       {
         path: 'fire-management',
