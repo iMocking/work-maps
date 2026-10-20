@@ -10,12 +10,17 @@
       @mouseup="onUp"
       @dblclick="onDblClick"
       @contextmenu.prevent="undoDrawPoint"
+      @wheel.prevent="onWheel"
+      @mousedown="onSvgDown"
     >
       <defs>
         <pattern id="map-grid" width="40" height="40" patternUnits="userSpaceOnUse">
           <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.5" />
         </pattern>
       </defs>
+
+      <!-- 缩放/平移变换组 -->
+      <g :transform="viewTransform">
 
       <!-- ===== 底图 ===== -->
       <g v-if="isGeo">
@@ -93,6 +98,55 @@
         >{{ poly.name }}</text>
       </g>
 
+      <!-- ===== 道路/连线（数据驱动展示）===== -->
+      <g v-for="path in store.paths" :key="path.id">
+        <polyline
+          v-if="path.points.length >= 2"
+          :points="pathPoints(path)"
+          fill="none"
+          :stroke="path.color"
+          :stroke-width="path.width || 2"
+          :stroke-dasharray="path.dashed ? '8 5' : undefined"
+          opacity="0.85"
+        />
+      </g>
+
+      <!-- ===== 墙体（2D 投影：位置/颜色/尺寸）===== -->
+      <g v-for="wall in store.walls" :key="wall.id">
+        <polyline
+          v-if="wallViewPoints(wall).length >= 2"
+          :points="wallPoints(wall)"
+          fill="none"
+          :stroke="wall.color"
+          :stroke-width="store.selectedWallId === wall.id ? 5 : 3"
+          :opacity="wall.opacity ?? 0.95"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          @click.stop="onWallClick(wall)"
+        />
+        <g v-if="store.selectedWallId === wall.id && tool === 'select'">
+          <circle
+            v-for="(pt, i) in wallViewPoints(wall)"
+            :key="i"
+            :cx="pt.x"
+            :cy="pt.y"
+            r="5"
+            fill="#fff"
+            stroke="#f56c6c"
+            stroke-width="2"
+            @mousedown.stop="onWallVertexDown($event, wall, i)"
+            @click.stop="onWallClick(wall)"
+          />
+        </g>
+        <text
+          v-if="store.selectedWallId === wall.id"
+          :x="wallMid(wall).x"
+          :y="wallMid(wall).y - 10"
+          text-anchor="middle"
+          class="poly-name"
+        >{{ wall.name }}（高 {{ wall.height }} · 厚 {{ wall.thickness }}）</text>
+      </g>
+
       <!-- ===== 点位 ===== -->
       <g v-for="marker in store.markers" :key="marker.id">
         <g
@@ -131,6 +185,7 @@
           fill="#409eff"
         />
       </g>
+      </g>
 
       <text v-if="tool === 'draw-polygon'" x="12" y="20" class="hint">单击添加顶点，双击闭合完成多边形，右键撤销顶点</text>
       <text v-else-if="tool === 'add-marker'" x="12" y="20" class="hint">单击底图放置点位，拖动点位可调整位置</text>
@@ -159,7 +214,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['select-marker', 'select-polygon'])
 
-const POLY_COLORS = ['#409eff', '#67c23a', '#e6a23c', '#f56c6c', '#9c27b0', '#5470c6']
+const POLY_COLORS = ['#30DCFF', '#2f6fde', '#3a7bfd', '#26a6d9', '#4fc3f7', '#1e88e5']
 
 const store = useMainStore()
 const svgRef = ref(null)
@@ -167,19 +222,45 @@ const selectedPolyId = ref(null)
 const drawingPoints = ref([])
 
 const isGeo = computed(() => store.coordType === 'geo')
-const activeCenter = computed(() => store.activeMap.center)
-const activeSpan = computed(() => store.activeMap.span)
+const activeCenter = computed(() => store.activeMap.data.center)
+const activeSpan = computed(() => store.activeMap.data.span)
 
 function clamp(v, min, max) {
   return Math.min(max, Math.max(min, v))
 }
 
-// ===== SVG 事件坐标换算 =====
+// ===== 2D 视图缩放/平移（滚轮缩放 + 空白拖拽平移）=====
+const zoom = ref(1)
+const pan = ref({ x: 0, y: 0 })
+const viewTransform = computed(() => `translate(${pan.value.x} ${pan.value.y}) scale(${zoom.value})`)
+let panning = false
+let panStart = { x: 0, y: 0, panX: 0, panY: 0 }
+
+function onWheel(e) {
+  const rect = svgRef.value.getBoundingClientRect()
+  const mx = ((e.clientX - rect.left) / rect.width) * VIEW_W
+  const my = ((e.clientY - rect.top) / rect.height) * VIEW_H
+  const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15
+  const next = clamp(zoom.value * factor, 0.5, 4)
+  const k = next / zoom.value
+  pan.value = { x: mx - (mx - pan.value.x) * k, y: my - (my - pan.value.y) * k }
+  zoom.value = next
+}
+
+function onSvgDown(e) {
+  if (e.button !== 0) return
+  panning = true
+  panStart = { x: e.clientX, y: e.clientY, panX: pan.value.x, panY: pan.value.y }
+}
+
+// ===== SVG 事件坐标换算（考虑缩放/平移）=====
 function svgPoint(evt) {
   const rect = svgRef.value.getBoundingClientRect()
+  const vx = ((evt.clientX - rect.left) / rect.width) * VIEW_W
+  const vy = ((evt.clientY - rect.top) / rect.height) * VIEW_H
   return {
-    x: ((evt.clientX - rect.left) / rect.width) * VIEW_W,
-    y: ((evt.clientY - rect.top) / rect.height) * VIEW_H,
+    x: (vx - pan.value.x) / zoom.value,
+    y: (vy - pan.value.y) / zoom.value,
   }
 }
 
@@ -189,6 +270,57 @@ function markerView(marker) {
     return projectGeoToView(marker.lon, marker.lat, activeCenter.value, activeSpan.value, VIEW_W, VIEW_H)
   }
   return localToView(marker.x, marker.y, VIEW_W, VIEW_H)
+}
+
+// ===== 道路 2D 投影 =====
+function pathPoints(path) {
+  return (path.points || []).map(pt => {
+    const p = pt.lon != null
+      ? projectGeoToView(pt.lon, pt.lat, activeCenter.value, activeSpan.value, VIEW_W, VIEW_H)
+      : localToView(pt.x, pt.y, VIEW_W, VIEW_H)
+    return `${p.x.toFixed(1)},${p.y.toFixed(1)}`
+  }).join(' ')
+}
+
+// ===== 墙体 2D 投影（points: [[x,y],...] 或 [[lon,lat],...]）=====
+function wallViewPoints(wall) {
+  return (wall.points || []).map(pt => {
+    if (Array.isArray(pt)) {
+      if (isGeo.value) {
+        return projectGeoToView(pt[0], pt[1], activeCenter.value, activeSpan.value, VIEW_W, VIEW_H)
+      }
+      return localToView(pt[0], pt[1], VIEW_W, VIEW_H)
+    }
+    if (pt.lon != null) {
+      return projectGeoToView(pt.lon, pt.lat, activeCenter.value, activeSpan.value, VIEW_W, VIEW_H)
+    }
+    return localToView(pt.x, pt.y, VIEW_W, VIEW_H)
+  })
+}
+
+function wallPoints(wall) {
+  return wallViewPoints(wall).map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')
+}
+
+// 墙体中点（用于名称标注）
+function wallMid(wall) {
+  const pts = wallViewPoints(wall)
+  if (!pts.length) return { x: 0, y: 0 }
+  const cx = pts.reduce((s, p) => s + p.x, 0) / pts.length
+  const cy = pts.reduce((s, p) => s + p.y, 0) / pts.length
+  return { x: cx, y: cy }
+}
+
+function onWallClick(wall) {
+  store.selectWall(wall.id)
+  store.selectedMarker = null
+  selectedPolyId.value = null
+  emit('select-polygon', null)
+}
+
+function onWallVertexDown(evt, wall, index) {
+  evt.stopPropagation()
+  drag = { type: 'wall-vertex', wall, index }
 }
 
 // ===== 底图轮廓坐标 =====
@@ -289,6 +421,7 @@ function onCanvasClick(evt) {
     drawingPoints.value.push(p)
   } else {
     store.selectedMarker = null
+    store.selectedWallId = null
     selectedPolyId.value = null
     emit('select-polygon', null)
   }
@@ -351,6 +484,14 @@ function onVertexDown(evt, poly, index) {
 }
 
 function onMove(evt) {
+  // 按住空白拖拽平移（优先于元素拖动）
+  if (panning) {
+    pan.value = {
+      x: panStart.panX + (evt.clientX - panStart.x),
+      y: panStart.panY + (evt.clientY - panStart.y),
+    }
+    return
+  }
   if (!drag) return
   const p = svgPoint(evt)
   if (drag.type === 'marker') {
@@ -369,6 +510,18 @@ function onMove(evt) {
         y: clamp(l.y, 0, 100),
       })
     }
+  } else if (drag.type === 'wall-vertex') {
+    const isArrayPt = Array.isArray(drag.wall.points[drag.index])
+    let updated
+    if (isGeo.value) {
+      const g = unprojectViewToGeo(p.x, p.y, activeCenter.value, activeSpan.value, VIEW_W, VIEW_H)
+      updated = isArrayPt ? [clamp(g.lon, 73, 135), clamp(g.lat, 3, 54)] : { lon: clamp(g.lon, 73, 135), lat: clamp(g.lat, 3, 54) }
+    } else {
+      const l = viewToLocal(p.x, p.y, VIEW_W, VIEW_H)
+      updated = isArrayPt ? [clamp(l.x, 0, 100), clamp(l.y, 0, 100)] : { x: clamp(l.x, 0, 100), y: clamp(l.y, 0, 100) }
+    }
+    drag.wall.points.splice(drag.index, 1, updated)
+    store.persistMaps()
   } else if (drag.type === 'vertex') {
     const map = store.activeMap
     const pt = drag.poly.points[drag.index]
@@ -386,6 +539,7 @@ function onMove(evt) {
 
 function onUp() {
   drag = null
+  panning = false
 }
 
 function onDblClick() {

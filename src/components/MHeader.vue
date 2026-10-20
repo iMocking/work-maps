@@ -1,8 +1,8 @@
 <template>
   <div class="m-header">
     <div class="m-header-wrap">
-      <div class="m-header-title">{{ title }}</div>
-      <div class="m-header-subtext">{{ subText }}</div>
+      <div class="m-header-title" :style="titleStyle">{{ title }}</div>
+      <div class="m-header-subtext" :style="subTextStyle">{{ subText }}</div>
     </div>
     <div class="m-header-left">
       <slot name="left"></slot>
@@ -14,7 +14,9 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   title: {
     type: String,
     default: '数据可视化大屏',
@@ -23,6 +25,28 @@ defineProps({
     type: String,
     default: 'Visualization Platform',
   },
+  // 大标题颜色：为空时使用默认蓝白渐变
+  titleColor: {
+    type: String,
+    default: '',
+  },
+  // 副标题颜色：为空时使用默认青色
+  subTextColor: {
+    type: String,
+    default: '',
+  },
+})
+
+const titleStyle = computed(() => {
+  const c = props.titleColor
+  return c
+    ? { color: c, background: 'none', WebkitTextFillColor: c }
+    : {}
+})
+
+const subTextStyle = computed(() => {
+  const c = props.subTextColor
+  return c ? { color: c } : {}
 })
 </script>
 

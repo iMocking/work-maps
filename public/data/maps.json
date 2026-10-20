@@ -1,0 +1,1594 @@
+{
+  "maps": [
+    {
+      "id": "map-park",
+      "mapName": "园区地图",
+      "description": "园区物联网数字孪生地图，Smart Factory JSON 协议示例",
+      "remark": "",
+      "createdAt": "2026-09-20 09:30",
+      "data": {
+        "schemaVersion": "1.0",
+        "coordType": "local",
+        "baseMap": "grid",
+        "center": {
+          "lon": 114.3,
+          "lat": 30.55
+        },
+        "span": 0.1,
+        "range": {
+          "x": [
+            0,
+            100
+          ],
+          "y": [
+            0,
+            100
+          ],
+          "z": [
+            0,
+            50
+          ]
+        },
+        "scene": {
+          "background": "#0a1929",
+          "ground": {
+            "color": "#0f2440",
+            "opacity": 0.85,
+            "size": 320
+          },
+          "grid": {
+            "show": true,
+            "size": 320,
+            "divisions": 20,
+            "color": "#1e4d8f"
+          },
+          "lights": [
+            {
+              "type": "ambient",
+              "color": "#cfe8ff",
+              "intensity": 0.75
+            },
+            {
+              "type": "directional",
+              "color": "#9fd8ff",
+              "intensity": 0.9,
+              "position": [
+                300,
+                600,
+                200
+              ]
+            }
+          ],
+          "camera": {
+            "fov": 50,
+            "position": [
+              0,
+              320,
+              380
+            ],
+            "target": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "walls": [
+          {
+            "id": "wall-north",
+            "name": "北围墙",
+            "points": [
+              [
+                15,
+                15
+              ],
+              [
+                85,
+                15
+              ]
+            ],
+            "height": 4,
+            "thickness": 0.6,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wall-east",
+            "name": "东围墙",
+            "points": [
+              [
+                85,
+                15
+              ],
+              [
+                85,
+                85
+              ]
+            ],
+            "height": 4,
+            "thickness": 0.6,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wall-south",
+            "name": "南围墙",
+            "points": [
+              [
+                85,
+                85
+              ],
+              [
+                15,
+                85
+              ]
+            ],
+            "height": 4,
+            "thickness": 0.6,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wall-west",
+            "name": "西围墙",
+            "points": [
+              [
+                15,
+                85
+              ],
+              [
+                15,
+                15
+              ]
+            ],
+            "height": 4,
+            "thickness": 0.6,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": ""
+          }
+        ],
+        "buildings": [
+          {
+            "id": "b1",
+            "name": "办公楼A",
+            "x": 48,
+            "y": 38,
+            "width": 12,
+            "height": 9,
+            "depth": 8,
+            "color": "#2f6fde",
+            "opacity": 1,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "b2",
+            "name": "生产车间",
+            "x": 42,
+            "y": 62,
+            "width": 16,
+            "height": 7,
+            "depth": 10,
+            "color": "#3a7bfd",
+            "opacity": 1,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "b3",
+            "name": "仓库",
+            "x": 62,
+            "y": 66,
+            "width": 10,
+            "height": 5,
+            "depth": 8,
+            "color": "#1e88e5",
+            "opacity": 1,
+            "visible": true,
+            "note": ""
+          }
+        ],
+        "markers": [
+          {
+            "id": 1,
+            "type": "camera",
+            "name": "东南3摄像头",
+            "icon": "📹",
+            "x": 65,
+            "y": 35,
+            "color": "#30DCFF",
+            "label": "📹 东南3",
+            "location": "东南门东侧建筑外墙",
+            "status": "在线",
+            "note": "正常运行"
+          },
+          {
+            "id": 2,
+            "type": "camera",
+            "name": "西北2摄像头",
+            "icon": "📹",
+            "x": 30,
+            "y": 30,
+            "color": "#30DCFF",
+            "label": "",
+            "location": "西北角办公楼顶层",
+            "status": "在线",
+            "note": "正常运行"
+          },
+          {
+            "id": 3,
+            "type": "fire",
+            "name": "东门消防栓",
+            "icon": "🧯",
+            "x": 75,
+            "y": 60,
+            "color": "#4fc3f7",
+            "label": "",
+            "location": "东门外道路南侧",
+            "status": "正常",
+            "note": "水压正常",
+            "waterPressure": "正常",
+            "lastInspection": "2026-10-12"
+          },
+          {
+            "id": 4,
+            "type": "fire",
+            "name": "西门消防栓",
+            "icon": "🧯",
+            "x": 25,
+            "y": 55,
+            "color": "#4fc3f7",
+            "label": "",
+            "location": "西门内广场西侧",
+            "status": "异常",
+            "note": "压力略低，待巡检",
+            "waterPressure": "偏低",
+            "lastInspection": "2026-09-24"
+          },
+          {
+            "id": 5,
+            "type": "water",
+            "name": "北区水井",
+            "icon": "💧",
+            "x": 45,
+            "y": 25,
+            "color": "#64b5f6",
+            "label": "",
+            "location": "北厂区绿化带内",
+            "status": "正常",
+            "note": "水质合格"
+          },
+          {
+            "id": 6,
+            "type": "electric",
+            "name": "中心电井房",
+            "icon": "⚡",
+            "x": 55,
+            "y": 45,
+            "color": "#7fb3ff",
+            "label": "⚠ 温度异常",
+            "location": "中央配电室",
+            "status": "异常",
+            "note": "温度偏高38°C"
+          },
+          {
+            "id": 7,
+            "type": "electric",
+            "name": "南区电井房",
+            "icon": "⚡",
+            "x": 40,
+            "y": 70,
+            "color": "#7fb3ff",
+            "label": "",
+            "location": "南办公楼地下一层",
+            "status": "正常",
+            "note": "温度28°C"
+          }
+        ],
+        "polygons": [
+          {
+            "id": "p1",
+            "name": "园区围墙",
+            "points": [
+              {
+                "x": 15,
+                "y": 15
+              },
+              {
+                "x": 85,
+                "y": 15
+              },
+              {
+                "x": 85,
+                "y": 85
+              },
+              {
+                "x": 15,
+                "y": 85
+              }
+            ],
+            "color": "#30DCFF",
+            "fillOpacity": 0.22,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "p2",
+            "name": "主路轮廓",
+            "points": [
+              {
+                "x": 20,
+                "y": 50
+              },
+              {
+                "x": 40,
+                "y": 50
+              },
+              {
+                "x": 60,
+                "y": 50
+              },
+              {
+                "x": 80,
+                "y": 50
+              }
+            ],
+            "color": "#2b5fd9",
+            "fillOpacity": 0.22,
+            "visible": true,
+            "note": ""
+          }
+        ],
+        "paths": [
+          {
+            "id": "path-main",
+            "name": "主干道",
+            "points": [
+              {
+                "x": 20,
+                "y": 50
+              },
+              {
+                "x": 80,
+                "y": 50
+              }
+            ],
+            "color": "#3a7bfd",
+            "width": 2.5,
+            "dashed": false,
+            "flow": false,
+            "visible": true,
+            "note": ""
+          }
+        ],
+        "labels": [
+          {
+            "id": "label-park",
+            "name": "园区名称",
+            "text": "园区地图",
+            "x": 50,
+            "y": 8,
+            "z": 0,
+            "color": "#dbf9ff",
+            "fontSize": 24,
+            "visible": true,
+            "note": ""
+          }
+        ],
+        "meta": {
+          "author": "",
+          "version": "1.0",
+          "tags": [],
+          "extensions": {}
+        }
+      }
+    },
+    {
+      "id": "map-geo-wuhan",
+      "mapName": "武汉人文景观",
+      "description": "武汉人文景观（经纬度模式，中国 GIS 底图）",
+      "remark": "",
+      "createdAt": "2026-10-18 09:30",
+      "data": {
+        "schemaVersion": "1.0",
+        "coordType": "geo",
+        "baseMap": "china",
+        "center": {
+          "lon": 114.35,
+          "lat": 30.575
+        },
+        "span": 0.45,
+        "range": {
+          "x": [
+            73,
+            135
+          ],
+          "y": [
+            3,
+            54
+          ],
+          "z": [
+            0,
+            100
+          ]
+        },
+        "scene": {
+          "background": "#0a1929",
+          "ground": {
+            "color": "#0f2440",
+            "opacity": 0.85,
+            "size": 1100
+          },
+          "grid": {
+            "show": true,
+            "size": 1100,
+            "divisions": 100,
+            "color": "#1e4d8f"
+          },
+          "lights": [
+            {
+              "type": "ambient",
+              "color": "#cfe8ff",
+              "intensity": 0.75
+            },
+            {
+              "type": "directional",
+              "color": "#9fd8ff",
+              "intensity": 0.9,
+              "position": [
+                300,
+                600,
+                200
+              ]
+            }
+          ],
+          "camera": {
+            "fov": 50,
+            "position": [
+              0,
+              720,
+              860
+            ],
+            "target": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "walls": [],
+        "buildings": [
+          {
+            "id": "gb1",
+            "name": "黄鹤楼主楼",
+            "lon": 114.3095,
+            "lat": 30.5483,
+            "width": 10,
+            "height": 14,
+            "depth": 10,
+            "color": "#2f6fde",
+            "opacity": 1,
+            "visible": true,
+            "note": ""
+          }
+        ],
+        "markers": [
+          {
+            "id": 1,
+            "type": "poi",
+            "name": "黄鹤楼",
+            "icon": "🏛️",
+            "lon": 114.3095,
+            "lat": 30.5483,
+            "color": "#2f6fde",
+            "label": "",
+            "location": "武昌区蛇山",
+            "status": "正常",
+            "note": "AAAAA级景区，江南三大名楼"
+          },
+          {
+            "id": 2,
+            "type": "poi",
+            "name": "武汉长江大桥",
+            "icon": "🌉",
+            "lon": 114.301,
+            "lat": 30.549,
+            "color": "#26a6d9",
+            "label": "",
+            "location": "武昌-汉阳",
+            "status": "正常",
+            "note": "万里长江第一桥"
+          },
+          {
+            "id": 3,
+            "type": "poi",
+            "name": "东湖风景区",
+            "icon": "🌊",
+            "lon": 114.42,
+            "lat": 30.57,
+            "color": "#3a7bfd",
+            "label": "",
+            "location": "武昌东部",
+            "status": "正常",
+            "note": "中国最大城中湖"
+          },
+          {
+            "id": 4,
+            "type": "poi",
+            "name": "施洋烈士陵园",
+            "icon": "🪦",
+            "lon": 114.323,
+            "lat": 30.535,
+            "color": "#4fc3f7",
+            "label": "",
+            "location": "武昌区",
+            "status": "正常",
+            "note": "纪念\"二七\"大罢工烈士"
+          },
+          {
+            "id": 5,
+            "type": "poi",
+            "name": "辛亥首义公园",
+            "icon": "🏟️",
+            "lon": 114.31,
+            "lat": 30.545,
+            "color": "#64b5f6",
+            "label": "",
+            "location": "武昌蛇山",
+            "status": "正常",
+            "note": "辛亥革命纪念地"
+          },
+          {
+            "id": 6,
+            "type": "poi",
+            "name": "归元禅寺",
+            "icon": "⛩️",
+            "lon": 114.252,
+            "lat": 30.552,
+            "color": "#2b5fd9",
+            "label": "",
+            "location": "汉阳区翠微路",
+            "status": "正常",
+            "note": "武汉著名古刹"
+          },
+          {
+            "id": 7,
+            "type": "poi",
+            "name": "汉口江滩",
+            "icon": "🌅",
+            "lon": 114.312,
+            "lat": 30.602,
+            "color": "#1e88e5",
+            "label": "",
+            "location": "江岸区沿江大道",
+            "status": "正常",
+            "note": "滨江景观带"
+          }
+        ],
+        "polygons": [
+          {
+            "id": "gp1",
+            "name": "东湖水域示意",
+            "points": [
+              {
+                "lon": 114.4,
+                "lat": 30.58
+              },
+              {
+                "lon": 114.44,
+                "lat": 30.57
+              },
+              {
+                "lon": 114.43,
+                "lat": 30.54
+              },
+              {
+                "lon": 114.38,
+                "lat": 30.55
+              }
+            ],
+            "color": "#3a7bfd",
+            "fillOpacity": 0.22,
+            "visible": true,
+            "note": ""
+          }
+        ],
+        "paths": [],
+        "labels": [],
+        "meta": {
+          "author": "",
+          "version": "1.0",
+          "tags": [],
+          "extensions": {}
+        }
+      }
+    },
+    {
+      "id": "map-warehouse",
+      "mapName": "智能物流仓",
+      "description": "真实物流仓数据还原（原 warehouseConfig 模型 → 标准 JSON 协议）",
+      "remark": "由原 3D 仓库模型按协议自动转换",
+      "createdAt": "2026-10-20 08:33:58",
+      "data": {
+        "schemaVersion": "1.0",
+        "coordType": "local",
+        "baseMap": "grid",
+        "center": {
+          "lon": 114.3,
+          "lat": 30.55
+        },
+        "span": 0.1,
+        "range": {
+          "x": [
+            0,
+            100
+          ],
+          "y": [
+            0,
+            100
+          ],
+          "z": [
+            0,
+            50
+          ]
+        },
+        "scene": {
+          "background": "#0a1929",
+          "ground": {
+            "color": "#0f2440",
+            "opacity": 0.85,
+            "size": 320
+          },
+          "grid": {
+            "show": true,
+            "size": 320,
+            "divisions": 20,
+            "color": "#1e4d8f"
+          },
+          "lights": [
+            {
+              "type": "ambient",
+              "color": "#cfe8ff",
+              "intensity": 0.75
+            },
+            {
+              "type": "directional",
+              "color": "#9fd8ff",
+              "intensity": 0.9,
+              "position": [
+                300,
+                600,
+                200
+              ]
+            }
+          ],
+          "camera": {
+            "fov": 50,
+            "position": [
+              0,
+              320,
+              380
+            ],
+            "target": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "walls": [
+          {
+            "id": "wh-wall-north",
+            "name": "北围墙",
+            "points": [
+              [
+                0,
+                0
+              ],
+              [
+                100,
+                0
+              ]
+            ],
+            "height": 4,
+            "thickness": 0.8,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": "物流仓外围围墙"
+          },
+          {
+            "id": "wh-wall-east",
+            "name": "东围墙",
+            "points": [
+              [
+                100,
+                0
+              ],
+              [
+                100,
+                100
+              ]
+            ],
+            "height": 4,
+            "thickness": 0.8,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": "物流仓外围围墙"
+          },
+          {
+            "id": "wh-wall-south",
+            "name": "南围墙",
+            "points": [
+              [
+                100,
+                100
+              ],
+              [
+                0,
+                100
+              ]
+            ],
+            "height": 4,
+            "thickness": 0.8,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": "物流仓外围围墙"
+          },
+          {
+            "id": "wh-wall-west",
+            "name": "西围墙",
+            "points": [
+              [
+                0,
+                100
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "height": 4,
+            "thickness": 0.8,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": "物流仓外围围墙"
+          },
+          {
+            "id": "wh-div-0",
+            "name": "纵向隔断1",
+            "points": [
+              [
+                24.6875,
+                3.571428571428571
+              ],
+              [
+                25.3125,
+                96.42857142857143
+              ]
+            ],
+            "height": 3.5,
+            "thickness": 0.6,
+            "color": "#2f6fde",
+            "opacity": 0.85,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-div-1",
+            "name": "纵向隔断2",
+            "points": [
+              [
+                49.6875,
+                3.571428571428571
+              ],
+              [
+                50.31250000000001,
+                96.42857142857143
+              ]
+            ],
+            "height": 3.5,
+            "thickness": 0.6,
+            "color": "#2f6fde",
+            "opacity": 0.85,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-div-2",
+            "name": "纵向隔断3",
+            "points": [
+              [
+                74.6875,
+                3.571428571428571
+              ],
+              [
+                75.3125,
+                96.42857142857143
+              ]
+            ],
+            "height": 3.5,
+            "thickness": 0.6,
+            "color": "#2f6fde",
+            "opacity": 0.85,
+            "visible": true,
+            "note": ""
+          }
+        ],
+        "buildings": [
+          {
+            "id": "wh-col-0-0",
+            "name": "承重立柱1",
+            "x": 25,
+            "y": 25,
+            "width": 3,
+            "height": 4,
+            "depth": 4.285714285714286,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": "承重立柱（贴合于纵向隔断墙）"
+          },
+          {
+            "id": "wh-col-0-1",
+            "name": "承重立柱2",
+            "x": 50,
+            "y": 25,
+            "width": 3,
+            "height": 4,
+            "depth": 4.285714285714286,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": "承重立柱（贴合于纵向隔断墙）"
+          },
+          {
+            "id": "wh-col-0-2",
+            "name": "承重立柱3",
+            "x": 75,
+            "y": 25,
+            "width": 3,
+            "height": 4,
+            "depth": 4.285714285714286,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": "承重立柱（贴合于纵向隔断墙）"
+          },
+          {
+            "id": "wh-col-1-0",
+            "name": "承重立柱4",
+            "x": 25,
+            "y": 50,
+            "width": 3,
+            "height": 4,
+            "depth": 4.285714285714286,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": "承重立柱（贴合于纵向隔断墙）"
+          },
+          {
+            "id": "wh-col-1-1",
+            "name": "承重立柱5",
+            "x": 50,
+            "y": 50,
+            "width": 3,
+            "height": 4,
+            "depth": 4.285714285714286,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": "承重立柱（贴合于纵向隔断墙）"
+          },
+          {
+            "id": "wh-col-1-2",
+            "name": "承重立柱6",
+            "x": 75,
+            "y": 50,
+            "width": 3,
+            "height": 4,
+            "depth": 4.285714285714286,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": "承重立柱（贴合于纵向隔断墙）"
+          },
+          {
+            "id": "wh-col-2-0",
+            "name": "承重立柱7",
+            "x": 25,
+            "y": 75,
+            "width": 3,
+            "height": 4,
+            "depth": 4.285714285714286,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": "承重立柱（贴合于纵向隔断墙）"
+          },
+          {
+            "id": "wh-col-2-1",
+            "name": "承重立柱8",
+            "x": 50,
+            "y": 75,
+            "width": 3,
+            "height": 4,
+            "depth": 4.285714285714286,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": "承重立柱（贴合于纵向隔断墙）"
+          },
+          {
+            "id": "wh-col-2-2",
+            "name": "承重立柱9",
+            "x": 75,
+            "y": 75,
+            "width": 3,
+            "height": 4,
+            "depth": 4.285714285714286,
+            "color": "#2f6fde",
+            "opacity": 0.95,
+            "visible": true,
+            "note": "承重立柱（贴合于纵向隔断墙）"
+          },
+          {
+            "id": "wh-b-utility-room",
+            "name": "水电房",
+            "x": 92.5,
+            "y": 89.28571428571429,
+            "width": 5,
+            "height": 4,
+            "depth": 5.357142857142857,
+            "color": "#2f6fde",
+            "opacity": 1,
+            "visible": true,
+            "note": "原附属建筑"
+          },
+          {
+            "id": "wh-b-office",
+            "name": "员工签室",
+            "x": 7.5,
+            "y": 89.28571428571429,
+            "width": 7.5,
+            "height": 4,
+            "depth": 7.142857142857142,
+            "color": "#26a6d9",
+            "opacity": 1,
+            "visible": true,
+            "note": "原附属建筑"
+          },
+          {
+            "id": "wh-shelf-0",
+            "name": "货架1",
+            "x": 12.5,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-1",
+            "name": "货架2",
+            "x": 14.750000000000002,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-2",
+            "name": "货架3",
+            "x": 17,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-3",
+            "name": "货架4",
+            "x": 19.249999999999996,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-4",
+            "name": "货架5",
+            "x": 21.5,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-5",
+            "name": "货架6",
+            "x": 37.5,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-6",
+            "name": "货架7",
+            "x": 39.75,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-7",
+            "name": "货架8",
+            "x": 42.00000000000001,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-8",
+            "name": "货架9",
+            "x": 44.25,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-9",
+            "name": "货架10",
+            "x": 46.5,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-10",
+            "name": "货架11",
+            "x": 62.5,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-11",
+            "name": "货架12",
+            "x": 64.75,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-12",
+            "name": "货架13",
+            "x": 67,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-13",
+            "name": "货架14",
+            "x": 69.25,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-14",
+            "name": "货架15",
+            "x": 71.50000000000001,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-15",
+            "name": "货架16",
+            "x": 87.5,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-16",
+            "name": "货架17",
+            "x": 89.75,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-17",
+            "name": "货架18",
+            "x": 92,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-18",
+            "name": "货架19",
+            "x": 94.25000000000001,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-19",
+            "name": "货架20",
+            "x": 96.50000000000001,
+            "y": 14.285714285714285,
+            "width": 1,
+            "height": 1.2,
+            "depth": 10.714285714285714,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-20",
+            "name": "货架21",
+            "x": 12.5,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-21",
+            "name": "货架22",
+            "x": 14.750000000000002,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-22",
+            "name": "货架23",
+            "x": 17,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-23",
+            "name": "货架24",
+            "x": 19.249999999999996,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-24",
+            "name": "货架25",
+            "x": 37.5,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-25",
+            "name": "货架26",
+            "x": 39.75,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-26",
+            "name": "货架27",
+            "x": 42.00000000000001,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-27",
+            "name": "货架28",
+            "x": 44.25,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-28",
+            "name": "货架29",
+            "x": 62.5,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-29",
+            "name": "货架30",
+            "x": 64.75,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-30",
+            "name": "货架31",
+            "x": 67,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-31",
+            "name": "货架32",
+            "x": 69.25,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-32",
+            "name": "货架33",
+            "x": 87.5,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-33",
+            "name": "货架34",
+            "x": 89.75,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-34",
+            "name": "货架35",
+            "x": 92,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-35",
+            "name": "货架36",
+            "x": 94.25000000000001,
+            "y": 48.214285714285715,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-36",
+            "name": "货架37",
+            "x": 82.5,
+            "y": 78.57142857142857,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-37",
+            "name": "货架38",
+            "x": 84.74999999999999,
+            "y": 78.57142857142857,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-38",
+            "name": "货架39",
+            "x": 86.99999999999999,
+            "y": 78.57142857142857,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-shelf-39",
+            "name": "货架40",
+            "x": 89.25,
+            "y": 78.57142857142857,
+            "width": 1,
+            "height": 1.2,
+            "depth": 14.285714285714285,
+            "color": "#4fc3f7",
+            "opacity": 0.9,
+            "visible": true,
+            "note": ""
+          }
+        ],
+        "markers": [],
+        "polygons": [
+          {
+            "id": "wh-poly-outline",
+            "name": "物流仓场地轮廓",
+            "points": [
+              {
+                "x": 0,
+                "y": 0
+              },
+              {
+                "x": 100,
+                "y": 0
+              },
+              {
+                "x": 100,
+                "y": 100
+              },
+              {
+                "x": 0,
+                "y": 100
+              }
+            ],
+            "color": "#30DCFF",
+            "fillOpacity": 0.12,
+            "visible": true,
+            "note": "原 warehouseConfig 场地边界"
+          }
+        ],
+        "paths": [
+          {
+            "id": "wh-path-0",
+            "name": "内部通道1",
+            "points": [
+              {
+                "x": 2.5,
+                "y": 3.571428571428571
+              },
+              {
+                "x": 97.5,
+                "y": 3.571428571428571
+              }
+            ],
+            "color": "#3a7bfd",
+            "width": 1.7857142857142856,
+            "dashed": false,
+            "flow": false,
+            "visible": true,
+            "note": ""
+          },
+          {
+            "id": "wh-path-1",
+            "name": "内部通道2",
+            "points": [
+              {
+                "x": 2.5,
+                "y": 96.42857142857143
+              },
+              {
+                "x": 97.5,
+                "y": 96.42857142857143
+              }
+            ],
+            "color": "#3a7bfd",
+            "width": 1.7857142857142856,
+            "dashed": false,
+            "flow": false,
+            "visible": true,
+            "note": ""
+          }
+        ],
+        "labels": [
+          {
+            "id": "wh-label",
+            "name": "物流仓名称",
+            "text": "智能物流仓",
+            "x": 50,
+            "y": 4,
+            "z": 0,
+            "color": "#dbf9ff",
+            "fontSize": 26,
+            "visible": true,
+            "note": ""
+          }
+        ],
+        "meta": {
+          "author": "",
+          "version": "1.0",
+          "tags": [
+            "物流仓"
+          ],
+          "extensions": {
+            "source": "warehouseConfig"
+          }
+        }
+      }
+    }
+  ],
+  "activeMapId": "map-park",
+  "dashboardMapId": "map-warehouse"
+}

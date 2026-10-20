@@ -59,7 +59,7 @@
       <div class="saoguang">
         <img src="../assets/images/m-card/saoguang.svg" alt="" />
       </div>
-      <div class="m-card-hd-title">{{ title }}</div>
+      <div class="m-card-hd-title" :style="titleStyle">{{ title }}</div>
     </div>
 
     <!-- 内容区域 -->
@@ -118,6 +118,19 @@ const props = defineProps({
     type: String,
     default: '标题',
   },
+  // 标题颜色：为空时使用默认蓝白渐变
+  titleColor: {
+    type: String,
+    default: '',
+  },
+})
+
+// 标题样式（配置了颜色时纯色填充，否则保留默认渐变）
+const titleStyle = computed(() => {
+  const c = props.titleColor
+  return c
+    ? { color: c, background: 'none', WebkitTextFillColor: c }
+    : {}
 })
 
 // bd的路径

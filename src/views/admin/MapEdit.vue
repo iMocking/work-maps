@@ -10,12 +10,22 @@
           @change="store.switchMap($event.target.value)"
         >
           <option v-for="m in store.maps" :key="m.id" :value="m.id">
-            {{ m.name }}（{{ m.coordType === 'geo' ? '经纬度' : '园区坐标' }}）
+            {{ m.mapName }}（{{ m.data.coordType === 'geo' ? '经纬度' : '园区坐标' }}）
           </option>
         </select>
         <button class="tool-btn" @click="openAddMap">+ 新建地图</button>
         <button class="tool-btn" @click="openRename">重命名</button>
         <button class="tool-btn btn-danger" @click="openDeleteMap">删除</button>
+        <button class="tool-btn" @click="openMapInfo">📋 地图信息</button>
+        <button class="tool-btn" @click="exportMapJson">📤 导出 JSON</button>
+        <button class="tool-btn" @click="openImport">📥 导入 JSON</button>
+        <button
+          class="tool-btn"
+          :class="{ active: isDashboardMap }"
+          :title="isDashboardMap ? '当前地图正在驾驶舱展示' : '点击将当前地图设为驾驶舱展示数据源'"
+          @click="store.setDashboardMap(store.activeMapId)"
+        >🎯 展示到驾驶舱</button>
+        <span class="dash-map-badge">驾驶舱：{{ store.dashboardMap?.mapName || '—' }}</span>
       </div>
       <div class="toolbar-group">
         <button class="tool-btn" :class="{ active: mode === '2d' }" @click="switchMode('2d')">
@@ -44,7 +54,12 @@
         <button class="tool-btn btn-danger" :disabled="!hasSelection" @click="deleteSelected">
           🗑️ 删除选中
         </button>
-        <button class="tool-btn" @click="showBaseMap = !showBaseMap">🗺️ 底图设置</button>
+        <button
+          class="tool-btn"
+          :disabled="isGeoMap"
+          :title="isGeoMap ? '经纬度模式使用中国 GIS 底图，不允许更改' : '切换底图类型与视图范围'"
+          @click="showBaseMap = !showBaseMap"
+        >🗺️ 底图设置</button>
       </div>
     </div>
 
@@ -135,46 +150,83 @@
           </div>
         </template>
 
-        <template v-else-if="selectedBox">
-          <div class="panel-title">建筑盒子属性</div>
+        <template v-else-if="selectedWall">
+          <div class="panel-title">墙体属性</div>
           <div class="form-item">
             <label>名称</label>
-            <input v-model="selectedBox.name" type="text" />
-          </div>
-          <div class="form-item">
-            <label>宽度</label>
-            <input v-model.number="selectedBox.width" type="number" min="1" step="1" />
+            <input v-model="selectedWall.name" type="text" />
           </div>
           <div class="form-item">
             <label>高度</label>
-            <input v-model.number="selectedBox.height" type="number" min="1" step="1" />
+            <input v-model.number="selectedWall.height" type="number" min="0.1" step="0.5" />
           </div>
           <div class="form-item">
-            <label>深度</label>
-            <input v-model.number="selectedBox.depth" type="number" min="1" step="1" />
+            <label>厚度</label>
+            <input v-model.number="selectedWall.thickness" type="number" min="0.05" step="0.1" />
           </div>
           <div class="form-item">
             <label>颜色</label>
-            <input v-model="selectedBox.color" type="color" class="color-input" />
+            <input v-model="selectedWall.color" type="color" class="color-input" />
+          </div>
+          <div class="form-item">
+            <label>透明度（{{ Number(selectedWall.opacity ?? 0.95).toFixed(2) }}）</label>
+            <input v-model.number="selectedWall.opacity" type="range" min="0" max="1" step="0.05" class="range-input" />
+          </div>
+          <div class="form-item">
+            <label>可见</label>
+            <label class="check-label"><input v-model="selectedWall.visible" type="checkbox" /> 显示墙体</label>
+          </div>
+          <div class="form-item">
+            <label>备注</label>
+            <input v-model="selectedWall.note" type="text" />
+          </div>
+          <div class="form-item">
+            <label>顶点数</label>
+            <div class="static-value">{{ selectedWall.points.length }}</div>
+          </div>
+          <div class="form-tip">切换到 2D 编辑后可拖动墙体顶点调整走向；3D 中可直接看到墙体立体效果</div>
+        </template>
+
+        <template v-else-if="selectedBuilding">
+          <div class="panel-title">建筑属性</div>
+          <div class="form-item">
+            <label>名称</label>
+            <input v-model="selectedBuilding.name" type="text" />
+          </div>
+          <div class="form-item">
+            <label>宽度</label>
+            <input v-model.number="selectedBuilding.width" type="number" min="1" step="1" />
+          </div>
+          <div class="form-item">
+            <label>高度</label>
+            <input v-model.number="selectedBuilding.height" type="number" min="1" step="1" />
+          </div>
+          <div class="form-item">
+            <label>深度</label>
+            <input v-model.number="selectedBuilding.depth" type="number" min="1" step="1" />
+          </div>
+          <div class="form-item">
+            <label>颜色</label>
+            <input v-model="selectedBuilding.color" type="color" class="color-input" />
           </div>
           <template v-if="isGeoMap">
             <div class="form-item">
               <label>经度</label>
-              <input v-model.number="selectedBox.lon" type="number" step="0.0001" />
+              <input v-model.number="selectedBuilding.lon" type="number" step="0.0001" />
             </div>
             <div class="form-item">
               <label>纬度</label>
-              <input v-model.number="selectedBox.lat" type="number" step="0.0001" />
+              <input v-model.number="selectedBuilding.lat" type="number" step="0.0001" />
             </div>
           </template>
           <template v-else>
             <div class="form-item">
               <label>X（0-100）</label>
-              <input v-model.number="selectedBox.x" type="number" step="0.5" />
+              <input v-model.number="selectedBuilding.x" type="number" step="0.5" />
             </div>
             <div class="form-item">
               <label>Y（0-100）</label>
-              <input v-model.number="selectedBox.y" type="number" step="0.5" />
+              <input v-model.number="selectedBuilding.y" type="number" step="0.5" />
             </div>
           </template>
         </template>
@@ -223,7 +275,7 @@
                 @click="addMapForm.coordType = 'geo'"
               >
                 <div class="coord-title">🌐 经纬度模式</div>
-                <div class="coord-desc">真实地理坐标，标记旅游景点、烈士陵园、名胜古迹等</div>
+                <div class="coord-desc">真实地理坐标，标记旅游景点、烈士陵园、名胜古迹等；默认加载中国 GIS 底图（锁定不可改），仅可添加自定义点位</div>
               </div>
               <div
                 class="coord-option"
@@ -231,9 +283,12 @@
                 @click="addMapForm.coordType = 'local'"
               >
                 <div class="coord-title">🏭 园区模式</div>
-                <div class="coord-desc">园区逻辑坐标（0-100），建筑结构底图</div>
+                <div class="coord-desc">园区逻辑坐标（0-100），建筑结构底图；3D 中可自由摆放与调整建筑体块</div>
               </div>
             </div>
+          </div>
+          <div class="form-item">
+            <div class="coord-desc" style="color:#909399">新建地图将同时具备 2D 建筑底图与 3D 立体地图两种编辑形态，可在编辑页顶部切换。</div>
           </div>
           <template v-if="addMapForm.coordType === 'geo'">
             <div class="form-item">
@@ -287,12 +342,89 @@
         </div>
         <div class="modal-body">
           <p class="delete-text">
-            确定删除地图「{{ store.activeMap.name }}」吗？其点位、建筑、轮廓数据将一并删除且不可恢复。
+            确定删除地图「{{ store.activeMap.mapName }}」吗？其点位、建筑、轮廓数据将一并删除且不可恢复。
           </p>
         </div>
         <div class="modal-footer">
           <button class="btn-default" @click="deleteVisible = false">取消</button>
           <button class="btn-danger-solid" @click="confirmDeleteMap">删除</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 导入地图 JSON（Smart Factory 协议） -->
+    <div v-if="importVisible" class="modal-overlay" @click.self="importVisible = false">
+      <div class="modal-card">
+        <div class="modal-header">
+          <span class="modal-title">导入地图 JSON</span>
+          <button class="modal-close" @click="importVisible = false">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="import-tip">
+            支持 Smart Factory 协议文件（顶层为 mapName / description / createdAt / remark / data 结构），
+            一个 JSON 即可完整重建园区 2D/3D 地图（含墙体、建筑、点位、道路、标签）。
+            <a class="import-demo-link" href="/examples/smart-factory-demo.factory.json" download="smart-factory-demo.factory.json">⬇ 下载示例地图 JSON 体验</a>
+          </div>
+          <div class="file-zone" :class="{ dragging: importDragging }" @dragover.prevent="importDragging = true" @dragleave.prevent="importDragging = false" @drop.prevent="onImportDrop">
+            <input ref="importInputRef" type="file" accept=".json,application/json" class="file-input" @change="onImportFile" />
+            <div class="file-placeholder">
+              <div class="file-icon">📄</div>
+              <div>{{ importFileName || '点击选择或拖拽 JSON 文件到此处' }}</div>
+            </div>
+          </div>
+          <div v-if="importErrors.length" class="import-errors">
+            <div class="import-error-title">校验未通过：</div>
+            <div v-for="(err, i) in importErrors" :key="i" class="import-error-item">• {{ err }}</div>
+          </div>
+          <div v-if="importWarnings.length" class="import-warnings">
+            <div v-for="(w, i) in importWarnings" :key="i" class="import-warning-item">⚠ {{ w }}</div>
+          </div>
+          <div v-if="importPreview" class="import-preview">
+            <div class="preview-title">预览：{{ importPreview.mapName }}</div>
+            <div v-if="importPreview.description" class="preview-line">{{ importPreview.description }}</div>
+            <div class="preview-line">坐标模式：{{ importPreview.coordType === 'geo' ? '经纬度' : '园区' }} · 创建时间：{{ importPreview.createdAt || '—' }}</div>
+            <div v-if="importPreview.remark" class="preview-line">备注：{{ importPreview.remark }}</div>
+            <div class="preview-grid">
+              <div class="preview-cell"><span class="cell-num">{{ importPreview.counts.walls }}</span>墙体</div>
+              <div class="preview-cell"><span class="cell-num">{{ importPreview.counts.buildings }}</span>建筑</div>
+              <div class="preview-cell"><span class="cell-num">{{ importPreview.counts.markers }}</span>点位</div>
+              <div class="preview-cell"><span class="cell-num">{{ importPreview.counts.polygons }}</span>轮廓</div>
+              <div class="preview-cell"><span class="cell-num">{{ importPreview.counts.paths }}</span>道路</div>
+              <div class="preview-cell"><span class="cell-num">{{ importPreview.counts.labels }}</span>标签</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-default" @click="importVisible = false">取消</button>
+          <button class="btn-primary" :disabled="!importPreview" @click="confirmImport">确认导入</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 地图信息（描述/备注） -->
+    <div v-if="infoVisible" class="modal-overlay" @click.self="infoVisible = false">
+      <div class="modal-card">
+        <div class="modal-header">
+          <span class="modal-title">地图信息</span>
+          <button class="modal-close" @click="infoVisible = false">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-item">
+            <label class="form-label">地图名称<span class="required">*</span></label>
+            <input v-model="infoForm.name" type="text" class="form-input" />
+          </div>
+          <div class="form-item">
+            <label class="form-label">描述（导出为 description 字段）</label>
+            <textarea v-model="infoForm.description" rows="3" class="form-input" placeholder="地图用途、园区规模等"></textarea>
+          </div>
+          <div class="form-item">
+            <label class="form-label">备注（导出为 remark 字段）</label>
+            <textarea v-model="infoForm.remark" rows="2" class="form-input" placeholder="版本、维护人等信息"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-default" @click="infoVisible = false">取消</button>
+          <button class="btn-primary" @click="confirmMapInfo">保存</button>
         </div>
       </div>
     </div>
@@ -304,6 +436,7 @@ import { ref, computed, watch } from 'vue'
 import Map2DEditor from '../../components/map/Map2DEditor.vue'
 import Map3DEditor from '../../components/map/Map3DEditor.vue'
 import { useMainStore } from '../../store'
+import { validateMapJson, jsonToPrettyString, mapFileName, downloadTextFile } from '../../utils/mapSchema'
 
 const store = useMainStore()
 
@@ -313,40 +446,59 @@ const showBaseMap = ref(false)
 const selectedPoly = ref(null)
 
 const isGeoMap = computed(() => store.coordType === 'geo')
+// 当前地图是否为驾驶舱展示数据源
+const isDashboardMap = computed(() => store.dashboardMapId === store.activeMapId)
 
 const tools = [
   { id: 'select', label: '✋ 选择', modes: ['2d', '3d'] },
   { id: 'add-marker', label: '📍 添加点位', modes: ['2d', '3d'] },
   { id: 'draw-polygon', label: '✏️ 绘制轮廓', modes: ['2d'] },
   { id: 'add-box', label: '🏢 添加建筑', modes: ['3d'] },
+  { id: 'add-wall', label: '🧱 添加墙体', modes: ['3d'] },
 ]
 
-const visibleTools = computed(() => tools.filter(t => t.modes.includes(mode.value)))
+const visibleTools = computed(() => {
+  // 经纬度（中国 GIS）模式：底图锁定，仅允许添加自定义点位与选择
+  if (isGeoMap.value) {
+    return tools.filter(t => (t.id === 'select' || t.id === 'add-marker') && t.modes.includes(mode.value))
+  }
+  // 园区建筑模式：2D 可绘制轮廓，3D 可自由摆放/调整建筑与墙体
+  return tools.filter(t => t.modes.includes(mode.value))
+})
 
-const selectedBox = computed(() => {
-  return store.boxes.find(b => b.id === store.selectedBoxId) || null
+const selectedBuilding = computed(() => {
+  return store.buildings.find(b => b.id === store.selectedBuildingId) || null
+})
+
+const selectedWall = computed(() => {
+  return store.walls.find(w => w.id === store.selectedWallId) || null
 })
 
 const hasSelection = computed(() => {
-  return !!(store.selectedMarker || selectedBox.value || selectedPoly.value)
+  return !!(store.selectedMarker || selectedBuilding.value || selectedWall.value || selectedPoly.value)
 })
 
 function switchMode(m) {
   mode.value = m
-  if (m === '2d' && tool.value === 'add-box') tool.value = 'select'
+  if (m === '2d' && (tool.value === 'add-box' || tool.value === 'add-wall')) tool.value = 'select'
   if (m === '3d' && tool.value === 'draw-polygon') tool.value = 'select'
 }
 
 function onSelectPolygon(poly) {
   selectedPoly.value = poly
-  if (poly) store.selectedMarker = null
+  if (poly) {
+    store.selectedMarker = null
+    store.selectedWallId = null
+  }
 }
 
 function deleteSelected() {
   if (store.selectedMarker) {
     store.removeMarker(store.selectedMarker.id)
-  } else if (selectedBox.value) {
-    store.removeBox(selectedBox.value.id)
+  } else if (selectedBuilding.value) {
+    store.removeBuilding(selectedBuilding.value.id)
+  } else if (selectedWall.value) {
+    store.removeWall(selectedWall.value.id)
   } else if (selectedPoly.value) {
     store.removePolygon(selectedPoly.value.id)
     selectedPoly.value = null
@@ -358,16 +510,26 @@ const baseMapForm = ref({ type: 'china', centerLon: 114.35, centerLat: 30.575, s
 
 watch(() => store.activeMapId, () => {
   const map = store.activeMap
+  const d = map?.data || {}
   baseMapForm.value = {
-    type: map.baseMap || 'china',
-    centerLon: map.center?.lon ?? 114.35,
-    centerLat: map.center?.lat ?? 30.575,
-    span: map.span ?? 0.45,
+    type: d.baseMap || 'china',
+    centerLon: d.center?.lon ?? 114.35,
+    centerLat: d.center?.lat ?? 30.575,
+    span: d.span ?? 0.45,
   }
   selectedPoly.value = null
+  // 切到经纬度模式地图时，将工具复位为合法工具（该模式下仅点位可编辑）
+  if (isGeoMap.value && (tool.value === 'draw-polygon' || tool.value === 'add-box' || tool.value === 'add-wall')) {
+    tool.value = 'select'
+  }
 }, { immediate: true })
 
 function applyBaseMap() {
+  // 经纬度模式：中国 GIS 底图不允许更改（只能添加自定义点位）
+  if (isGeoMap.value) {
+    showBaseMap.value = false
+    return
+  }
   store.setBaseMap({
     baseMap: baseMapForm.value.type,
     center: { lon: baseMapForm.value.centerLon, lat: baseMapForm.value.centerLat },
@@ -408,7 +570,7 @@ const renameVisible = ref(false)
 const renameForm = ref({ name: '' })
 
 function openRename() {
-  renameForm.value = { name: store.activeMap.name }
+  renameForm.value = { name: store.activeMap.mapName }
   renameVisible.value = true
 }
 
@@ -435,9 +597,135 @@ function confirmDeleteMap() {
   }
 }
 
+// ===== 地图 JSON 导出（Smart Factory 协议）=====
+function exportMapJson() {
+  const json = store.exportMapJson(store.activeMapId)
+  if (!json) return
+  const text = jsonToPrettyString(json)
+  downloadTextFile(mapFileName(json.mapName), text)
+}
+
+// ===== 地图 JSON 导入 =====
+const importVisible = ref(false)
+const importDragging = ref(false)
+const importInputRef = ref(null)
+const importFileName = ref('')
+const importErrors = ref([])
+const importWarnings = ref([])
+const importPreview = ref(null)
+let pendingImportJson = null
+
+function openImport() {
+  importVisible.value = true
+  importFileName.value = ''
+  importErrors.value = []
+  importWarnings.value = []
+  importPreview.value = null
+  pendingImportJson = null
+  if (importInputRef.value) importInputRef.value.value = ''
+}
+
+function onImportDrop(e) {
+  importDragging.value = false
+  const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]
+  if (file) readImportFile(file)
+}
+
+function onImportFile(e) {
+  const file = e.target.files && e.target.files[0]
+  if (file) readImportFile(file)
+}
+
+function readImportFile(file) {
+  importFileName.value = file.name
+  const reader = new FileReader()
+  reader.onload = () => {
+    const text = reader.result
+    try {
+      const json = JSON.parse(text)
+      const v = validateMapJson(json)
+      if (!v.ok) {
+        pendingImportJson = null
+        importErrors.value = v.errors
+        importWarnings.value = v.warnings || []
+        importPreview.value = null
+        return
+      }
+      pendingImportJson = json
+      importErrors.value = []
+      importWarnings.value = v.warnings || []
+      const d = json.data || {}
+      importPreview.value = {
+        mapName: json.mapName,
+        description: json.description || '',
+        createdAt: json.createdAt || '',
+        remark: json.remark || '',
+        coordType: d.coordType,
+        counts: {
+          walls: (d.walls || []).length,
+          buildings: (d.buildings || []).length,
+          markers: (d.markers || []).length,
+          polygons: (d.polygons || []).length,
+          paths: (d.paths || []).length,
+          labels: (d.labels || []).length,
+        },
+      }
+    } catch (err) {
+      pendingImportJson = null
+      importErrors.value = ['不是有效的 JSON 文件：' + err.message]
+      importWarnings.value = []
+      importPreview.value = null
+    }
+  }
+  reader.readAsText(file)
+}
+
+function confirmImport() {
+  if (!pendingImportJson) return
+  const r = store.importMapFromJson(pendingImportJson)
+  if (r.ok) {
+    importVisible.value = false
+    importFileName.value = ''
+    importErrors.value = []
+    importWarnings.value = []
+    importPreview.value = null
+    pendingImportJson = null
+  } else {
+    importErrors.value = r.errors
+    importWarnings.value = r.warnings || []
+    importPreview.value = null
+  }
+}
+
+// ===== 地图信息（描述/备注，导出到 JSON 顶层字段）=====
+const infoVisible = ref(false)
+const infoForm = ref({ name: '', description: '', remark: '' })
+
+function openMapInfo() {
+  const map = store.activeMap
+  infoForm.value = {
+    name: map.mapName,
+    description: map.description || '',
+    remark: map.remark || '',
+  }
+  infoVisible.value = true
+}
+
+function confirmMapInfo() {
+  const name = infoForm.value.name.trim()
+  if (!name) return
+  store.renameMap(store.activeMapId, name)
+  store.updateMapInfo({
+    description: infoForm.value.description,
+    remark: infoForm.value.remark,
+  })
+  infoVisible.value = false
+}
+
 // ===== 属性面板持久化 =====
 watch(() => store.selectedMarker, () => store.persistMaps(), { deep: true })
-watch(() => selectedBox.value, () => store.persistMaps(), { deep: true })
+watch(() => selectedBuilding.value, () => store.persistMaps(), { deep: true })
+watch(() => selectedWall.value, () => store.persistMaps(), { deep: true })
 watch(() => selectedPoly.value, () => store.persistMaps(), { deep: true })
 </script>
 
@@ -480,6 +768,16 @@ watch(() => selectedPoly.value, () => store.persistMaps(), { deep: true })
   background: #fff;
   color: #303133;
   min-width: 180px;
+}
+
+.dash-map-badge {
+  padding: 6px 10px;
+  background: #ecf5ff;
+  border: 1px solid #b3d8ff;
+  border-radius: 4px;
+  color: #409eff;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
 .tool-btn {
@@ -795,5 +1093,162 @@ watch(() => selectedPoly.value, () => store.persistMaps(), { deep: true })
   color: #fff;
   font-size: 13px;
   cursor: pointer;
+}
+
+/* 墙体属性 */
+.range-input {
+  width: 100%;
+  padding: 0;
+  height: 22px;
+  accent-color: #409eff;
+  background: transparent;
+  border: none;
+}
+
+.check-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #606266;
+  cursor: pointer;
+}
+
+.check-label input {
+  width: auto;
+}
+
+/* 导入弹窗 */
+.import-tip {
+  font-size: 12px;
+  color: #909399;
+  line-height: 1.6;
+  padding: 10px 12px;
+  background: #f5f7fa;
+  border-radius: 6px;
+}
+
+.import-demo-link {
+  display: inline-block;
+  margin-top: 6px;
+  color: #409eff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.import-demo-link:hover {
+  text-decoration: underline;
+}
+
+.file-zone {
+  position: relative;
+  border: 2px dashed #c0c4cc;
+  border-radius: 6px;
+  padding: 18px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fafafa;
+}
+
+.file-zone.dragging {
+  border-color: #409eff;
+  background: #ecf5ff;
+}
+
+.file-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-placeholder {
+  font-size: 13px;
+  color: #606266;
+  pointer-events: none;
+}
+
+.file-icon {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.import-errors {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: #fef0f0;
+  border: 1px solid #fbc4c4;
+  border-radius: 6px;
+}
+
+.import-error-title {
+  font-size: 13px;
+  color: #f56c6c;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.import-error-item {
+  font-size: 12px;
+  color: #f56c6c;
+  line-height: 1.7;
+}
+
+.import-warnings {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #fdf6ec;
+  border: 1px solid #faecd8;
+  border-radius: 6px;
+}
+
+.import-warning-item {
+  font-size: 12px;
+  color: #e6a23c;
+  line-height: 1.7;
+}
+
+.import-preview {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 6px;
+}
+
+.preview-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #303133;
+  margin-bottom: 6px;
+}
+
+.preview-line {
+  font-size: 12px;
+  color: #606266;
+  line-height: 1.7;
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.preview-cell {
+  text-align: center;
+  padding: 8px 4px;
+  background: #f5f7fa;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #909399;
+}
+
+.cell-num {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: #409eff;
 }
 </style>

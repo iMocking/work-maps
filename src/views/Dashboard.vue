@@ -4,18 +4,31 @@
     <div class="dashboard-bg"></div>
 
     <!-- 头部 -->
-    <MHeader title="普洛斯武汉新洲物流仓" sub-text="INTELLIGENT PARK MANAGEMENT CENTER">
+    <MHeader
+      :title="cfg.title"
+      :sub-text="cfg.subTitle"
+      :title-color="cfg.titleColor"
+      :sub-text-color="cfg.subTitleColor"
+    >
       <template #left>
-        <span class="text-sm text-cyan-100">🌧️ 小雨 27°C</span>
+        <span
+          v-if="cfg.weatherEnabled"
+          class="text-sm text-cyan-100"
+          :style="{ color: cfg.weatherColor }"
+        >{{ cfg.weatherText }}</span>
       </template>
       <template #right>
-        <span class="text-sm text-cyan-100 font-mono">{{ currentTime }}</span>
+        <span
+          v-if="cfg.timeEnabled"
+          class="text-sm text-cyan-100 font-mono"
+          :style="{ color: cfg.timeColor }"
+        >{{ currentTime }}</span>
       </template>
     </MHeader>
 
     <!-- 左侧面板组 -->
     <div class="left-panel-group">
-      <MCard title="大宗商品销售额" :width="360">
+      <MCard :title="cfg.leftCardTitles[0]" :title-color="cfg.cardTitleColor" :width="360">
         <div class="chart-bar">
           <div v-for="item in salesData" :key="item.name" class="bar-item">
             <div class="bar-value" :style="{ height: item.height + 'px', background: item.color }">
@@ -26,7 +39,7 @@
         </div>
       </MCard>
 
-      <MCard title="年度经济增长点" :width="360">
+      <MCard :title="cfg.leftCardTitles[1]" :title-color="cfg.cardTitleColor" :width="360">
         <div class="pie-chart">
           <div class="pie-ring">
             <div class="pie-center">
@@ -43,7 +56,7 @@
         </div>
       </MCard>
 
-      <MCard title="近年经济情况" :width="360">
+      <MCard :title="cfg.leftCardTitles[2]" :title-color="cfg.cardTitleColor" :width="360">
         <div class="line-chart">
           <svg width="100%" height="120" viewBox="0 0 320 120">
             <polyline points="0,90 40,60 80,80 120,40 160,70 200,30 240,55 280,25 320,45"
@@ -62,7 +75,7 @@
         </div>
       </MCard>
 
-      <MCard title="各区经济收益" :width="360">
+      <MCard :title="cfg.leftCardTitles[3]" :title-color="cfg.cardTitleColor" :width="360">
         <div class="funnel-chart">
           <div v-for="item in districtData" :key="item.name" class="funnel-item">
             <div class="funnel-bar" :style="{ width: item.width + '%', background: item.color }">
@@ -94,7 +107,7 @@
 
     <!-- 右侧面板组 -->
     <div class="right-panel-group">
-      <MCard title="专项资金用途" :width="360" >
+      <MCard :title="cfg.rightCardTitles[0]" :title-color="cfg.cardTitleColor" :width="360" >
         <div class="progress-list">
           <div v-for="item in fundData" :key="item.name" class="progress-item">
             <div class="progress-header">
@@ -108,7 +121,7 @@
         </div>
       </MCard>
 
-      <MCard title="人群消费占比" :width="360" >
+      <MCard :title="cfg.rightCardTitles[1]" :title-color="cfg.cardTitleColor" :width="360" >
         <div class="pie-chart">
           <div class="pie-ring" style="background: conic-gradient(#FF9800 0 40%, #4FC3F7 40% 65%, #30DCFF 65% 85%, #FFD54F 85% 100%)">
             <div class="pie-center">
@@ -124,7 +137,7 @@
         </div>
       </MCard>
 
-      <MCard title="用电情况" :width="360" >
+      <MCard :title="cfg.rightCardTitles[2]" :title-color="cfg.cardTitleColor" :width="360" >
         <div class="line-chart">
           <svg width="100%" height="120" viewBox="0 0 320 120">
             <polyline points="0,80 40,60 80,90 120,50 160,70 200,40 240,65 280,35 320,55"
@@ -143,7 +156,7 @@
         </div>
       </MCard>
 
-      <MCard title="各季度增长情况" :width="360" >
+      <MCard :title="cfg.rightCardTitles[3]" :title-color="cfg.cardTitleColor" :width="360" >
         <div class="group-bar-chart">
           <div v-for="item in quarterData" :key="item.name" class="group-bar-item">
             <div class="group-bars">
@@ -158,26 +171,98 @@
 
     <!-- 中间地图区域 -->
     <div class="map-area">
-      <!-- 2D 地图模式 -->
+      <!-- 2D 地图模式（数据驱动绘制，替代原航拍图片底图；支持滚轮缩放） -->
       <template v-if="mapMode === '2d'">
         <div class="map-placeholder">
-          <div class="map-grid"></div>
-          <div class="map-center-glow"></div>
-        </div>
-
-        <!-- 点位标记 -->
-        <div
-          v-for="marker in markers"
-          :key="marker.id"
-          class="map-marker"
-          :style="{ left: marker.x + '%', top: marker.y + '%' }"
-          @click="showInfoCard(marker)"
-        >
-          <div class="marker-pillar" :style="{ background: marker.color }"></div>
-          <div class="marker-dot" :style="{ background: marker.color, boxShadow: `0 0 15px ${marker.color}` }"></div>
-          <div v-if="marker.label" class="marker-label" :style="{ borderColor: marker.color, color: marker.color }">
-            {{ marker.label }}
+          <div
+            class="map-canvas"
+            ref="mapCanvasRef"
+            @wheel.prevent="onMapWheel"
+            @mousedown="onMapMouseDown"
+            @mousemove="onMapMouseMove"
+            @mouseup="onMapMouseUp"
+            @mouseleave="onMapMouseUp"
+          >
+            <div class="map-viewport" :style="viewportStyle">
+              <svg class="map-data-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <defs>
+                  <radialGradient id="dashMapBg" cx="50%" cy="50%" r="75%">
+                    <stop offset="0%" stop-color="#0f2440" />
+                    <stop offset="100%" stop-color="#0a1929" />
+                  </radialGradient>
+                  <pattern id="dashMapGrid" width="5" height="5" patternUnits="userSpaceOnUse">
+                    <path d="M 5 0 L 0 0 0 5" fill="none" stroke="#1e4d8f" stroke-width="0.08" stroke-opacity="0.4" />
+                  </pattern>
+                </defs>
+                <!-- 科技蓝场景背景 + 网格 -->
+                <rect width="100" height="100" fill="url(#dashMapBg)" />
+                <rect width="100" height="100" fill="url(#dashMapGrid)" />
+                <!-- 底图轮廓 -->
+                <polygon
+                  v-for="p in dashPolygons"
+                  :key="p.id"
+                  :points="dashPolyPoints(p)"
+                  :fill="p.color"
+                  fill-opacity="0.22"
+                  :stroke="p.color"
+                  stroke-width="0.5"
+                />
+                <!-- 道路 -->
+                <polyline
+                  v-for="p in dashPaths"
+                  :key="p.id"
+                  :points="dashLinePoints(p)"
+                  fill="none"
+                  :stroke="p.color"
+                  :stroke-width="p.width || 0.6"
+                  :stroke-dasharray="p.dashed ? '1.5 1' : undefined"
+                  opacity="0.85"
+                />
+                <!-- 墙体 2D 投影（位置/颜色/尺寸来自数据） -->
+                <polyline
+                  v-for="w in dashWalls"
+                  :key="w.id"
+                  :points="dashWallPoints(w)"
+                  fill="none"
+                  :stroke="w.color"
+                  stroke-width="0.5"
+                  :opacity="w.opacity ?? 0.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <!-- 建筑俯视投影（width × depth） -->
+                <rect
+                  v-for="b in dashBuildings"
+                  :key="b.id"
+                  :x="b.x - b.width / 2"
+                  :y="b.y - b.depth / 2"
+                  :width="b.width"
+                  :height="b.depth"
+                  :fill="b.color"
+                  :fill-opacity="b.opacity ?? 0.9"
+                  stroke="#30DCFF"
+                  stroke-width="0.15"
+                  stroke-opacity="0.5"
+                  rx="0.4"
+                />
+              </svg>
+              <!-- 点位标记（随视口一起缩放/平移） -->
+              <div
+                v-for="marker in dashMarkers"
+                :key="marker.id"
+                class="map-marker"
+                :style="{ left: marker.x + '%', top: marker.y + '%' }"
+                @click="showInfoCard(marker)"
+              >
+                <div class="marker-pillar" :style="{ background: marker.color }"></div>
+                <div class="marker-dot" :style="{ background: marker.color, boxShadow: `0 0 15px ${marker.color}` }"></div>
+                <div v-if="marker.label" class="marker-label" :style="{ borderColor: marker.color, color: marker.color }">
+                  {{ marker.label }}
+                </div>
+              </div>
+            </div>
           </div>
+          <div class="map-overlay"></div>
         </div>
       </template>
 
@@ -256,16 +341,89 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import MHeader from '../components/MHeader.vue'
 import MMenu from '../components/MMenu.vue'
 import MCard from '../components/MCard.vue'
 import ParkMap3D from '../components/ParkMap3D.vue'
+import { useConfigStore } from '../store/config'
+import { useMainStore } from '../store'
+
+// 系统配置（驾驶舱标题/卡片标题/时间/天气/颜色，实时生效）
+const configStore = useConfigStore()
+const cfg = computed(() => configStore.dashboard)
+
+// 驾驶舱展示地图数据（编辑界面"设为驾驶舱展示"切换；实时读取 store）
+const store = useMainStore()
+const dashMarkers = computed(() => {
+  const markers = store.dashboardMap?.data?.markers || []
+  // 2D 模式按百分比定位，仅渲染园区逻辑坐标（x/y）点位
+  return markers.filter(m => typeof m.x === 'number' && typeof m.y === 'number')
+})
+
+// ===== 2D 数据驱动地图（替代原航拍图片底图）=====
+// 底图轮廓 / 道路 / 墙体 / 建筑全部来自驾驶舱展示地图数据，随数据实时变化
+const dashMapData = computed(() => store.dashboardMap?.data || null)
+const dashPolygons = computed(() => (dashMapData.value?.polygons || [])
+  .filter(p => p.visible !== false && Array.isArray(p.points) && p.points.length >= 2 && typeof p.points[0].x === 'number'))
+const dashPaths = computed(() => (dashMapData.value?.paths || [])
+  .filter(p => p.visible !== false && Array.isArray(p.points) && p.points.length >= 2 && typeof p.points[0].x === 'number'))
+const dashWalls = computed(() => (dashMapData.value?.walls || [])
+  .filter(w => w.visible !== false && Array.isArray(w.points) && w.points.length >= 2))
+const dashBuildings = computed(() => (dashMapData.value?.buildings || [])
+  .filter(b => b.visible !== false && typeof b.x === 'number' && b.width > 0))
+// 坐标序列化（对象点 → "x,y" 串）
+const dashPolyPoints = p => p.points.filter(pt => typeof pt.x === 'number').map(pt => `${pt.x},${pt.y}`).join(' ')
+const dashLinePoints = p => p.points.filter(pt => typeof pt.x === 'number').map(pt => `${pt.x},${pt.y}`).join(' ')
+// 墙体点统一为 [x,y] 数组对
+const dashWallPoints = w => w.points.map(pt => `${pt[0]},${pt[1]}`).join(' ')
+
+// ===== 2D 地图缩放/平移（滚轮缩放 + 按住拖拽平移，以指针为中心）=====
+const mapCanvasRef = ref(null)
+const mapZoom = ref(1)
+const mapPan = ref({ x: 0, y: 0 })
+const isMapPanning = ref(false)
+const panStart = ref({ x: 0, y: 0, panX: 0, panY: 0 })
+const viewportStyle = computed(() => ({
+  transform: `translate(${mapPan.value.x}px, ${mapPan.value.y}px) scale(${mapZoom.value})`,
+}))
+
+function onMapWheel(e) {
+  const rect = mapCanvasRef.value.getBoundingClientRect()
+  const mx = e.clientX - rect.left
+  const my = e.clientY - rect.top
+  const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15
+  const next = Math.min(8, Math.max(1, mapZoom.value * factor))
+  const k = next / mapZoom.value
+  mapPan.value = {
+    x: mx - (mx - mapPan.value.x) * k,
+    y: my - (my - mapPan.value.y) * k,
+  }
+  mapZoom.value = next
+}
+
+function onMapMouseDown(e) {
+  if (e.button !== 0) return
+  isMapPanning.value = true
+  panStart.value = { x: e.clientX, y: e.clientY, panX: mapPan.value.x, panY: mapPan.value.y }
+}
+
+function onMapMouseMove(e) {
+  if (!isMapPanning.value) return
+  mapPan.value = {
+    x: panStart.value.panX + (e.clientX - panStart.value.x),
+    y: panStart.value.panY + (e.clientY - panStart.value.y),
+  }
+}
+
+function onMapMouseUp() {
+  isMapPanning.value = false
+}
 
 const currentTime = ref('')
 const activeMenu = ref('1')
 const selectedMarker = ref(null)
-const mapMode = ref('2d')
+const mapMode = ref('3d')
 
 const topMenuItems = [
   { index: '1', label: '编辑地图', route: '/map-edit' },
@@ -306,18 +464,10 @@ const quarterData = [
   { name: '四季度', bar1: 80, bar2: 50 },
 ]
 
-// 地图点位
-const markers = [
-  { id: 1, type: 'camera', name: '东南3摄像头', icon: '📹', x: 65, y: 35, color: '#30DCFF', label: '📹 东南3', location: '东南门东侧建筑外墙', status: '在线', note: '正常运行' },
-  { id: 2, type: 'camera', name: '西北2摄像头', icon: '📹', x: 30, y: 30, color: '#30DCFF', label: '', location: '西北角办公楼顶层', status: '在线', note: '正常运行' },
-  { id: 3, type: 'fire', name: '东门消防栓', icon: '🧯', x: 75, y: 60, color: '#ff6b6b', label: '', location: '东门外道路南侧', status: '正常', note: '水压正常' },
-  { id: 4, type: 'fire', name: '西门消防栓', icon: '🧯', x: 25, y: 55, color: '#ff6b6b', label: '', location: '西门内广场西侧', status: '正常', note: '水压正常' },
-  { id: 5, type: 'water', name: '北区水井', icon: '💧', x: 45, y: 25, color: '#64b5f6', label: '', location: '北厂区绿化带内', status: '正常', note: '水质合格' },
-  { id: 6, type: 'electric', name: '中心电井房', icon: '⚡', x: 55, y: 45, color: '#ffd54f', label: '⚠ 温度异常', location: '中央配电室', status: '异常', note: '温度偏高38°C' },
-  { id: 7, type: 'electric', name: '南区电井房', icon: '⚡', x: 40, y: 70, color: '#ffd54f', label: '', location: '南办公楼地下一层', status: '正常', note: '温度28°C' },
-]
-
 let timer = null
+
+// 时间格式变化时立即刷新显示
+watch(() => cfg.value.timeFormat, () => updateTime())
 
 onMounted(() => {
   updateTime()
@@ -329,13 +479,19 @@ onBeforeUnmount(() => {
 })
 
 function updateTime() {
-  const now = new Date()
-  currentTime.value = now.getFullYear() + '-' +
-    String(now.getMonth() + 1).padStart(2, '0') + '-' +
-    String(now.getDate()).padStart(2, '0') + ' ' +
-    String(now.getHours()).padStart(2, '0') + ':' +
-    String(now.getMinutes()).padStart(2, '0') + ':' +
-    String(now.getSeconds()).padStart(2, '0')
+  currentTime.value = formatTime(new Date(), cfg.value.timeFormat)
+}
+
+// 按配置格式渲染时间，支持 YYYY MM DD HH mm ss 令牌
+function formatTime(date, fmt) {
+  const pad = (n) => String(n).padStart(2, '0')
+  return (fmt || 'YYYY-MM-DD HH:mm:ss')
+    .replace('YYYY', String(date.getFullYear()))
+    .replace('MM', pad(date.getMonth() + 1))
+    .replace('DD', pad(date.getDate()))
+    .replace('HH', pad(date.getHours()))
+    .replace('mm', pad(date.getMinutes()))
+    .replace('ss', pad(date.getSeconds()))
 }
 
 function handleMenuSelect(index) {
@@ -496,14 +652,14 @@ function locateToCenter() {
 .map-mode-switch {
   position: absolute;
   left: 410px;
-  bottom: 65px;
+  bottom: 110px;
   display: flex;
   gap: 6px;
   background: rgba(10, 30, 50, 0.406);
   border: 1px solid rgba(48, 220, 255, 0.13);
   border-radius: 6px;
   padding: 4px;
-  z-index: 10;
+  z-index: 20;
 }
 
 .mode-btn {
@@ -534,22 +690,44 @@ function locateToCenter() {
   background: radial-gradient(ellipse at center, rgba(48, 220, 255, 0.08) 0%, transparent 70%);
 }
 
-.map-grid {
+/* 2D 数据驱动地图（数据绘制替代航拍图片底图） */
+.map-canvas {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, rgba(48, 220, 255, 0.1) 1px, transparent 1px);
-  background-size: 30px 30px;
+  overflow: hidden;
 }
 
-.map-center-glow {
+.map-viewport {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(48, 220, 255, 0.15) 0%, transparent 70%);
-  border-radius: 50%;
+  inset: 0;
+  transform-origin: 0 0;
+}
+
+.map-data-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.map-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(5, 15, 51, 0.4) 0%, rgba(5, 15, 51, 0.2) 50%, rgba(48, 220, 255, 0.1) 100%);
+}
+
+.map-bg-image-3d {
+  position: absolute;
+  inset: 0;
+  background: url('../assets/images/park-3d-night.jpg') no-repeat center center;
+  background-size: cover;
+}
+
+.map-overlay-3d {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(48, 220, 255, 0.1) 0%, rgba(5, 15, 51, 0.3) 100%);
 }
 
 /* 地图点位 */

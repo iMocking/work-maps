@@ -53,6 +53,12 @@ const routes = [
         component: () => import('../views/admin/AlarmManagement.vue'),
         meta: { title: '告警管理' },
       },
+      {
+        path: 'system-config',
+        name: 'system-config',
+        component: () => import('../views/admin/SystemConfig.vue'),
+        meta: { title: '系统配置' },
+      },
     ],
   },
 ]

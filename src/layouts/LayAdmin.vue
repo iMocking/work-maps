@@ -55,6 +55,7 @@ const menuItems = [
   { path: '/dict-management', icon: '📚', title: '字典管理' },
   { path: '/fire-management', icon: '🧯', title: '消防管理' },
   { path: '/alarm-management', icon: '🚨', title: '告警管理' },
+  { path: '/system-config', icon: '⚙️', title: '系统配置' },
 ]
 
 const currentPageTitle = computed(() => {

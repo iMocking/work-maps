@@ -1,0 +1,976 @@
+{
+  "mapName": "智能物流仓",
+  "description": "真实物流仓数据还原（原 warehouseConfig 模型 → 标准 JSON 协议）",
+  "remark": "由原 3D 仓库模型按协议自动转换",
+  "createdAt": "2026-10-20 08:15:20",
+  "data": {
+    "schemaVersion": "1.0",
+    "coordType": "local",
+    "baseMap": "grid",
+    "center": {
+      "lon": 114.3,
+      "lat": 30.55
+    },
+    "span": 0.1,
+    "range": {
+      "x": [
+        0,
+        100
+      ],
+      "y": [
+        0,
+        100
+      ],
+      "z": [
+        0,
+        50
+      ]
+    },
+    "scene": {
+      "background": "#0a1929",
+      "ground": {
+        "color": "#0f2440",
+        "opacity": 0.85,
+        "size": 320
+      },
+      "grid": {
+        "show": true,
+        "size": 320,
+        "divisions": 20,
+        "color": "#1e4d8f"
+      },
+      "lights": [
+        {
+          "type": "ambient",
+          "color": "#cfe8ff",
+          "intensity": 0.75
+        },
+        {
+          "type": "directional",
+          "color": "#9fd8ff",
+          "intensity": 0.9,
+          "position": [
+            300,
+            600,
+            200
+          ]
+        }
+      ],
+      "camera": {
+        "fov": 50,
+        "position": [
+          0,
+          320,
+          380
+        ],
+        "target": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "walls": [
+      {
+        "id": "wh-wall-north",
+        "name": "北围墙",
+        "points": [
+          [
+            0,
+            0
+          ],
+          [
+            100,
+            0
+          ]
+        ],
+        "height": 4,
+        "thickness": 0.8,
+        "color": "#2f6fde",
+        "opacity": 0.95,
+        "visible": true,
+        "note": "物流仓外围围墙"
+      },
+      {
+        "id": "wh-wall-east",
+        "name": "东围墙",
+        "points": [
+          [
+            100,
+            0
+          ],
+          [
+            100,
+            100
+          ]
+        ],
+        "height": 4,
+        "thickness": 0.8,
+        "color": "#2f6fde",
+        "opacity": 0.95,
+        "visible": true,
+        "note": "物流仓外围围墙"
+      },
+      {
+        "id": "wh-wall-south",
+        "name": "南围墙",
+        "points": [
+          [
+            100,
+            100
+          ],
+          [
+            0,
+            100
+          ]
+        ],
+        "height": 4,
+        "thickness": 0.8,
+        "color": "#2f6fde",
+        "opacity": 0.95,
+        "visible": true,
+        "note": "物流仓外围围墙"
+      },
+      {
+        "id": "wh-wall-west",
+        "name": "西围墙",
+        "points": [
+          [
+            0,
+            100
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "height": 4,
+        "thickness": 0.8,
+        "color": "#2f6fde",
+        "opacity": 0.95,
+        "visible": true,
+        "note": "物流仓外围围墙"
+      },
+      {
+        "id": "wh-div-0",
+        "name": "纵向隔断1",
+        "points": [
+          [
+            24.6875,
+            3.571428571428571
+          ],
+          [
+            25.3125,
+            96.42857142857143
+          ]
+        ],
+        "height": 3.5,
+        "thickness": 0.6,
+        "color": "#2f6fde",
+        "opacity": 0.85,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-div-1",
+        "name": "纵向隔断2",
+        "points": [
+          [
+            49.6875,
+            3.571428571428571
+          ],
+          [
+            50.31250000000001,
+            96.42857142857143
+          ]
+        ],
+        "height": 3.5,
+        "thickness": 0.6,
+        "color": "#2f6fde",
+        "opacity": 0.85,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-div-2",
+        "name": "纵向隔断3",
+        "points": [
+          [
+            74.6875,
+            3.571428571428571
+          ],
+          [
+            75.3125,
+            96.42857142857143
+          ]
+        ],
+        "height": 3.5,
+        "thickness": 0.6,
+        "color": "#2f6fde",
+        "opacity": 0.85,
+        "visible": true,
+        "note": ""
+      }
+    ],
+    "buildings": [
+      {
+        "id": "wh-col-0-0",
+        "name": "承重立柱1",
+        "x": 25,
+        "y": 25,
+        "width": 3,
+        "height": 4,
+        "depth": 4.285714285714286,
+        "color": "#2f6fde",
+        "opacity": 0.95,
+        "visible": true,
+        "note": "承重立柱（贴合于纵向隔断墙）"
+      },
+      {
+        "id": "wh-col-0-1",
+        "name": "承重立柱2",
+        "x": 50,
+        "y": 25,
+        "width": 3,
+        "height": 4,
+        "depth": 4.285714285714286,
+        "color": "#2f6fde",
+        "opacity": 0.95,
+        "visible": true,
+        "note": "承重立柱（贴合于纵向隔断墙）"
+      },
+      {
+        "id": "wh-col-0-2",
+        "name": "承重立柱3",
+        "x": 75,
+        "y": 25,
+        "width": 3,
+        "height": 4,
+        "depth": 4.285714285714286,
+        "color": "#2f6fde",
+        "opacity": 0.95,
+        "visible": true,
+        "note": "承重立柱（贴合于纵向隔断墙）"
+      },
+      {
+        "id": "wh-col-1-0",
+        "name": "承重立柱4",
+        "x": 25,
+        "y": 50,
+        "width": 3,
+        "height": 4,
+        "depth": 4.285714285714286,
+        "color": "#2f6fde",
+        "opacity": 0.95,
+        "visible": true,
+        "note": "承重立柱（贴合于纵向隔断墙）"
+      },
+      {
+        "id": "wh-col-1-1",
+        "name": "承重立柱5",
+        "x": 50,
+        "y": 50,
+        "width": 3,
+        "height": 4,
+        "depth": 4.285714285714286,
+        "color": "#2f6fde",
+        "opacity": 0.95,
+        "visible": true,
+        "note": "承重立柱（贴合于纵向隔断墙）"
+      },
+      {
+        "id": "wh-col-1-2",
+        "name": "承重立柱6",
+        "x": 75,
+        "y": 50,
+        "width": 3,
+        "height": 4,
+        "depth": 4.285714285714286,
+        "color": "#2f6fde",
+        "opacity": 0.95,
+        "visible": true,
+        "note": "承重立柱（贴合于纵向隔断墙）"
+      },
+      {
+        "id": "wh-col-2-0",
+        "name": "承重立柱7",
+        "x": 25,
+        "y": 75,
+        "width": 3,
+        "height": 4,
+        "depth": 4.285714285714286,
+        "color": "#2f6fde",
+        "opacity": 0.95,
+        "visible": true,
+        "note": "承重立柱（贴合于纵向隔断墙）"
+      },
+      {
+        "id": "wh-col-2-1",
+        "name": "承重立柱8",
+        "x": 50,
+        "y": 75,
+        "width": 3,
+        "height": 4,
+        "depth": 4.285714285714286,
+        "color": "#2f6fde",
+        "opacity": 0.95,
+        "visible": true,
+        "note": "承重立柱（贴合于纵向隔断墙）"
+      },
+      {
+        "id": "wh-col-2-2",
+        "name": "承重立柱9",
+        "x": 75,
+        "y": 75,
+        "width": 3,
+        "height": 4,
+        "depth": 4.285714285714286,
+        "color": "#2f6fde",
+        "opacity": 0.95,
+        "visible": true,
+        "note": "承重立柱（贴合于纵向隔断墙）"
+      },
+      {
+        "id": "wh-b-utility-room",
+        "name": "水电房",
+        "x": 92.5,
+        "y": 89.28571428571429,
+        "width": 5,
+        "height": 4,
+        "depth": 5.357142857142857,
+        "color": "#2f6fde",
+        "opacity": 1,
+        "visible": true,
+        "note": "原附属建筑"
+      },
+      {
+        "id": "wh-b-office",
+        "name": "员工签室",
+        "x": 7.5,
+        "y": 89.28571428571429,
+        "width": 7.5,
+        "height": 4,
+        "depth": 7.142857142857142,
+        "color": "#26a6d9",
+        "opacity": 1,
+        "visible": true,
+        "note": "原附属建筑"
+      },
+      {
+        "id": "wh-shelf-0",
+        "name": "货架1",
+        "x": 12.5,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-1",
+        "name": "货架2",
+        "x": 14.750000000000002,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-2",
+        "name": "货架3",
+        "x": 17,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-3",
+        "name": "货架4",
+        "x": 19.249999999999996,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-4",
+        "name": "货架5",
+        "x": 21.5,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-5",
+        "name": "货架6",
+        "x": 37.5,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-6",
+        "name": "货架7",
+        "x": 39.75,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-7",
+        "name": "货架8",
+        "x": 42.00000000000001,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-8",
+        "name": "货架9",
+        "x": 44.25,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-9",
+        "name": "货架10",
+        "x": 46.5,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-10",
+        "name": "货架11",
+        "x": 62.5,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-11",
+        "name": "货架12",
+        "x": 64.75,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-12",
+        "name": "货架13",
+        "x": 67,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-13",
+        "name": "货架14",
+        "x": 69.25,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-14",
+        "name": "货架15",
+        "x": 71.50000000000001,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-15",
+        "name": "货架16",
+        "x": 87.5,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-16",
+        "name": "货架17",
+        "x": 89.75,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-17",
+        "name": "货架18",
+        "x": 92,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-18",
+        "name": "货架19",
+        "x": 94.25000000000001,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-19",
+        "name": "货架20",
+        "x": 96.50000000000001,
+        "y": 14.285714285714285,
+        "width": 1,
+        "height": 1.2,
+        "depth": 10.714285714285714,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-20",
+        "name": "货架21",
+        "x": 12.5,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-21",
+        "name": "货架22",
+        "x": 14.750000000000002,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-22",
+        "name": "货架23",
+        "x": 17,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-23",
+        "name": "货架24",
+        "x": 19.249999999999996,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-24",
+        "name": "货架25",
+        "x": 37.5,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-25",
+        "name": "货架26",
+        "x": 39.75,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-26",
+        "name": "货架27",
+        "x": 42.00000000000001,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-27",
+        "name": "货架28",
+        "x": 44.25,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-28",
+        "name": "货架29",
+        "x": 62.5,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-29",
+        "name": "货架30",
+        "x": 64.75,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-30",
+        "name": "货架31",
+        "x": 67,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-31",
+        "name": "货架32",
+        "x": 69.25,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-32",
+        "name": "货架33",
+        "x": 87.5,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-33",
+        "name": "货架34",
+        "x": 89.75,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-34",
+        "name": "货架35",
+        "x": 92,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-35",
+        "name": "货架36",
+        "x": 94.25000000000001,
+        "y": 48.214285714285715,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-36",
+        "name": "货架37",
+        "x": 82.5,
+        "y": 78.57142857142857,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-37",
+        "name": "货架38",
+        "x": 84.74999999999999,
+        "y": 78.57142857142857,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-38",
+        "name": "货架39",
+        "x": 86.99999999999999,
+        "y": 78.57142857142857,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-shelf-39",
+        "name": "货架40",
+        "x": 89.25,
+        "y": 78.57142857142857,
+        "width": 1,
+        "height": 1.2,
+        "depth": 14.285714285714285,
+        "color": "#4fc3f7",
+        "opacity": 0.9,
+        "visible": true,
+        "note": ""
+      }
+    ],
+    "markers": [],
+    "polygons": [
+      {
+        "id": "wh-poly-outline",
+        "name": "物流仓场地轮廓",
+        "points": [
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": 100,
+            "y": 0
+          },
+          {
+            "x": 100,
+            "y": 100
+          },
+          {
+            "x": 0,
+            "y": 100
+          }
+        ],
+        "color": "#30DCFF",
+        "fillOpacity": 0.12,
+        "visible": true,
+        "note": "原 warehouseConfig 场地边界"
+      }
+    ],
+    "paths": [
+      {
+        "id": "wh-path-0",
+        "name": "内部通道1",
+        "points": [
+          {
+            "x": 2.5,
+            "y": 3.571428571428571
+          },
+          {
+            "x": 97.5,
+            "y": 3.571428571428571
+          }
+        ],
+        "color": "#3a7bfd",
+        "width": 1.7857142857142856,
+        "dashed": false,
+        "flow": false,
+        "visible": true,
+        "note": ""
+      },
+      {
+        "id": "wh-path-1",
+        "name": "内部通道2",
+        "points": [
+          {
+            "x": 2.5,
+            "y": 96.42857142857143
+          },
+          {
+            "x": 97.5,
+            "y": 96.42857142857143
+          }
+        ],
+        "color": "#3a7bfd",
+        "width": 1.7857142857142856,
+        "dashed": false,
+        "flow": false,
+        "visible": true,
+        "note": ""
+      }
+    ],
+    "labels": [
+      {
+        "id": "wh-label",
+        "name": "物流仓名称",
+        "text": "智能物流仓",
+        "x": 50,
+        "y": 4,
+        "z": 0,
+        "color": "#dbf9ff",
+        "fontSize": 26,
+        "visible": true,
+        "note": ""
+      }
+    ],
+    "meta": {
+      "author": "",
+      "version": "1.0",
+      "tags": [
+        "物流仓"
+      ],
+      "extensions": {
+        "source": "warehouseConfig"
+      }
+    }
+  }
+}
